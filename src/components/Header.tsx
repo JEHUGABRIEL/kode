@@ -161,11 +161,10 @@ function Barre({ entrees, onOuvrir }: { entrees: Entree[]; onOuvrir: () => void 
         <Image
           src={assets.logo}
           alt={site.name}
-          width={300}
-          height={88}
+          width={832}
+          height={588}
           priority
-          unoptimized
-          className="h-[44px] w-[150px] object-contain object-left"
+          className="h-[66px] w-auto object-contain object-left"
         />
       </Link>
 

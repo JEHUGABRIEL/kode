@@ -54,7 +54,7 @@ src/
 │   ├── page.tsx            Accueil — assemblage des 13 blocs
 │   ├── {agence,services,formations,labo,contact,mentions-legales}/page.tsx
 │   ├── not-found.tsx       404 en français
-│   ├── icon.svg            Favicon monogramme
+│   ├── icon.png            Favicon (symbole du logo officiel) + apple-icon.png
 │   ├── globals.css         Système de design complet (§3 à §10 du document)
 │   ├── robots.ts / sitemap.ts
 ├── components/
@@ -122,7 +122,7 @@ L'en-tête et le héros ont été mesurés directement sur `adjemson.com`
 | Élément | Valeur relevée |
 |---|---|
 | Barre d'en-tête | 88 px de haut, fond blanc, filet bas `#E6E9EB` |
-| Logo | 150 × 44 px à 30 px du bord gauche (`/img/kode-logo.svg`) |
+| Logo | vrai logo KODÊ, 66 px de haut à 30 px du bord gauche (`/img/kode-logo-clair.png`) |
 | Menu | Roboto Mono 700, 14 px, lettrage +1 px, capitales, noir `#000` ; première entrée à 312 px |
 | Entrée active | `#D1C236` + trait de 3 px au-dessus du libellé |
 | CTA « Rendez-vous » | Roboto Mono 700, 13 px, lettrage +2 px, blanc sur `#2B2B2B`, 88 px de haut |
@@ -176,7 +176,7 @@ elles servent une police d'icônes, ici remplacée par des SVG en ligne.
    site KODÊ) : à confirmer, il alimente le JSON-LD, le sitemap et les balises canoniques.
 1. **Coordonnées** — téléphone/WhatsApp `+236 70 08 50 53`, `groupekode@outlook.com`,
    Avenue Benzvi derrière la CEMAC, Facebook : déjà renseignés dans `src/lib/site.ts`.
-2. **Signature** — `public/img/kode-logo.svg` (logo horizontal de l'en-tête),
+2. **Signature** — `public/img/kode-logo-clair.png` (vrai logo, version fond clair, en-tête),
    `kode-logo.jpg` (logo officiel, image de partage) et `kode-motif.svg`. Les anciens
    fichiers `public/img/adjemson-*` ne sont plus utilisés.
 3. **Photographies** — les visuels viennent d'Unsplash (licence libre, usage

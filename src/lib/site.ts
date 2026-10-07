@@ -57,7 +57,8 @@ export const navCta = { href: "/contact", label: "Démarrer un projet" } as cons
  * Unsplash de remplacement, à remplacer par une vraie photo d'événement.
  */
 export const assets = {
-  logo: "/img/kode-logo.svg",
+  /* Vrai logo KODÊ, version pour fond clair (fond retiré, crème → brun) */
+  logo: "/img/kode-logo-clair.png",
   logoCarre: "/img/kode-logo.jpg",
   herosPhoto:
     "https://images.unsplash.com/photo-1573164574511-73c773193279?auto=format&fit=crop&w=1800&q=72",
