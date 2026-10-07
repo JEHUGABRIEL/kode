@@ -7,7 +7,7 @@ import { img } from "@/lib/site";
 
 export async function generateMetadata(): Promise<Metadata> {
   const lang = await getLang();
-  const { mentions } = dictionnaire(lang);
+  const { mentions } = await dictionnaire(lang);
   return {
     title: mentions.meta.titre,
     description: mentions.meta.description,

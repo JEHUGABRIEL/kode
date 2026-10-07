@@ -13,7 +13,7 @@ import { ArrowRight } from "@/components/icons";
 import Reveal from "@/components/Reveal";
 import { localiser } from "@/i18n/config";
 import { getDictionnaire, getLang } from "@/i18n/serveur";
-import { img } from "@/lib/site";
+import { realisationsPubliees } from "@/lib/contenu";
 
 /**
  * Bloc 8 du site de référence (§5) : « Récentes réalisations ».
@@ -30,7 +30,10 @@ const DELAIS = [200, 300, 400, 500] as const;
 export default async function Projects() {
   const lang = await getLang();
   const { projets: t } = await getDictionnaire();
-  const projets = t.items.map((item, i) => ({ ...item, image: img.projets[i] }));
+  /* Les quatre premières réalisations publiées, dans l'ordre du back-office. */
+  const projets = (await realisationsPubliees())
+    .slice(0, 4)
+    .map((r) => ({ ...r.contenu[lang], image: r.imageUrl, id: r.id }));
   const lienRealisations = localiser(lang, "/labo");
 
   return (
@@ -54,7 +57,7 @@ export default async function Projects() {
         <div className="mt-14 flex flex-col gap-8 md:mt-20 md:gap-10 md:pb-10">
           {projets.map((projet, i) => (
             <article
-              key={projet.titre}
+              key={projet.id}
               style={{ "--rang": i } as React.CSSProperties}
               className="pile-carte grid border border-bordure bg-white md:grid-cols-2"
             >
@@ -79,13 +82,15 @@ export default async function Projects() {
               </div>
 
               <div className="relative aspect-[4/3] overflow-hidden bg-gris-clair md:my-12 md:aspect-auto md:min-h-[360px]">
-                <Image
-                  src={projet.image}
-                  alt=""
-                  fill
-                  sizes="(min-width: 768px) 50vw, 100vw"
-                  className="object-cover"
-                />
+                {projet.image && (
+                  <Image
+                    src={projet.image}
+                    alt=""
+                    fill
+                    sizes="(min-width: 768px) 50vw, 100vw"
+                    className="object-cover"
+                  />
+                )}
               </div>
             </article>
           ))}

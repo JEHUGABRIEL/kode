@@ -1,10 +1,7 @@
 import { notFound } from "next/navigation";
 import { lang as paramLang } from "next/root-params";
+import { dictionnaireFusionne } from "@/lib/contenu";
 import { hasLangue, type Langue } from "./config";
-import { en } from "./dictionnaires/en";
-import { fr } from "./dictionnaires/fr";
-
-const dictionnaires = { fr, en } as const;
 
 /**
  * Langue de la page en cours, lue depuis le segment racine `app/[lang]`
@@ -13,14 +10,17 @@ const dictionnaires = { fr, en } as const;
  */
 export async function getLang(): Promise<Langue> {
   const valeur = await paramLang();
-  if (!hasLangue(valeur)) notFound();
+  if (!valeur || !hasLangue(valeur)) notFound();
   return valeur;
 }
 
-/** Dictionnaire de la langue en cours. */
+/**
+ * Dictionnaire de la langue en cours : textes du code, remplacés par ceux
+ * modifiés dans le back-office (/admin/textes).
+ */
 export async function getDictionnaire() {
-  return dictionnaires[await getLang()];
+  return dictionnaireFusionne(await getLang());
 }
 
-/** Dictionnaire d'une langue donnée (métadonnées, sitemap). */
-export const dictionnaire = (lang: Langue) => dictionnaires[lang];
+/** Dictionnaire d'une langue donnée (métadonnées). */
+export const dictionnaire = (lang: Langue) => dictionnaireFusionne(lang);

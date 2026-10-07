@@ -4,6 +4,8 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "images.unsplash.com", pathname: "/**" },
+      /* Images des réalisations saisies dans le back-office : toute adresse https. */
+      { protocol: "https", hostname: "**" },
     ],
   },
   turbopack: {

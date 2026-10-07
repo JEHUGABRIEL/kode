@@ -25,6 +25,31 @@ KODÊ (`~/Bureau/kode`). Les photographies sont des visuels Unsplash de remplace
 - Sélecteur : `src/components/LangSwitch.tsx`, menu déroulant qui renvoie vers la même
   page dans l'autre langue.
 
+## Back-office (`/admin`)
+
+Accès : **`/admin`**, protégé par mot de passe (`ADMIN_PASSWORD`), session signée
+(`ADMIN_SESSION_SECRET`, cookie `kode_bo`, 7 jours). Non traduit, non indexé.
+
+| Rubrique | Ce qu'elle gère |
+|---|---|
+| Tableau de bord | Avis à valider, demandes à traiter, derniers éléments reçus |
+| Avis clients | Le formulaire « Laisser un avis » enregistre « en attente » ; publier, refuser, supprimer. Seuls les avis publiés s'affichent (page Réalisations) |
+| Demandes de contact | Chaque envoi du formulaire de contact (en plus de WhatsApp / e-mail) ; marquer traitée, répondre, supprimer |
+| Réalisations | Créer, modifier (FR + EN), publier / dépublier, réordonner, supprimer ; photo téléversée dans Vercel Blob ou adresse https. Les 4 premières publiées vont sur l'accueil |
+| Textes du site | Tous les textes FR et EN, rubrique par rubrique, avec recherche ; retour aux textes d'origine possible |
+
+Chaque modification régénère aussitôt les pages publiques (`revalidatePath`).
+
+**Données** : Neon Postgres (`DATABASE_URL`, intégration Vercel `kode-rca-db`), tables créées
+au premier usage (`src/lib/db.ts`), 6 réalisations de départ (`src/lib/realisations-initiales.ts`).
+Les textes modifiés sont fusionnés avec ceux du code (`src/lib/fusion.ts`) : la structure du
+site ne peut pas être cassée depuis le back-office. Sans base, le site affiche le contenu du code.
+**Photos** : Vercel Blob (`BLOB_READ_WRITE_TOKEN`, magasin `kode-rca-images`), téléversement
+direct depuis le navigateur via `src/app/api/televersement/route.ts` (réservé à une session admin).
+
+> La même base sert au développement local et à la production : un test en local écrit dans
+> les vraies données.
+
 ## Stack
 
 | | |

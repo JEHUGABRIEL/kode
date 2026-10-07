@@ -1,16 +1,19 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { enregistrerDemande } from "@/lib/actions-publiques";
 import { site, waLink } from "@/lib/site";
+import type { Langue } from "@/i18n/config";
 import { Mail, WhatsApp } from "./icons";
 import type { Dictionnaire } from "@/i18n/dictionnaires/fr";
 
 /**
- * Site statique : le formulaire pré-remplit WhatsApp ou le client e-mail.
- * Pour recevoir les demandes côté serveur, brancher une Server Action et
- * remplacer `envoyer`.
+ * Le formulaire pré-remplit WhatsApp ou le client e-mail du visiteur, et
+ * enregistre en parallèle la demande pour le back-office (/admin/demandes).
+ * WhatsApp est ouvert avant l'enregistrement : une fenêtre ouverte après
+ * un `await` serait bloquée par le navigateur.
  */
-export default function ContactForm({ textes: t }: { textes: Dictionnaire["formulaire"] }) {
+export default function ContactForm({ textes: t, lang }: { textes: Dictionnaire["formulaire"]; lang: Langue }) {
   const refFormulaire = useRef<HTMLFormElement>(null);
   const [statut, setStatut] = useState<string | null>(null);
 
@@ -20,6 +23,23 @@ export default function ContactForm({ textes: t }: { textes: Dictionnaire["formu
 
     const donnees = new FormData(formulaire);
     const valeur = (cle: string) => String(donnees.get(cle) ?? "").trim() || "—";
+    const brut = (cle: string) => String(donnees.get(cle) ?? "").trim();
+
+    void enregistrerDemande({
+      nom: brut("nom"),
+      structure: brut("structure"),
+      email: brut("email"),
+      telephone: brut("telephone"),
+      besoin: brut("besoin"),
+      budget: brut("budget"),
+      message: brut("message"),
+      langue: lang,
+      canal,
+      site_web: brut("site_web"),
+    }).catch(() => {
+      /* L'envoi WhatsApp / e-mail reste le canal principal : un échec
+         d'enregistrement ne doit pas bloquer le visiteur. */
+    });
 
     const corps = [
       t.message.entete,
@@ -51,7 +71,16 @@ export default function ContactForm({ textes: t }: { textes: Dictionnaire["formu
   const etiquette = "t-label-sm text-encre/70";
 
   return (
-    <form ref={refFormulaire} onSubmit={(e) => e.preventDefault()} className="grid gap-5" noValidate>
+    <form ref={refFormulaire} onSubmit={(e) => e.preventDefault()} className="relative grid gap-5" noValidate>
+      {/* Piège à robots : invisible et ignoré par les lecteurs d'écran */}
+      <input
+        type="text"
+        name="site_web"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden
+        className="absolute -left-[9999px] h-0 w-0 opacity-0"
+      />
       <div className="grid gap-5 sm:grid-cols-2">
         <div className="grid gap-2">
           <label className={etiquette} htmlFor="nom">

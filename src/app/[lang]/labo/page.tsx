@@ -6,11 +6,12 @@ import Reveal from "@/components/Reveal";
 import { Container, Divider, Section, TitreSection } from "@/components/ui";
 import { alternates } from "@/i18n/config";
 import { dictionnaire, getDictionnaire, getLang } from "@/i18n/serveur";
+import { avisPublies, realisationsPubliees } from "@/lib/contenu";
 import { img } from "@/lib/site";
 
 export async function generateMetadata(): Promise<Metadata> {
   const lang = await getLang();
-  const { pageRealisations } = dictionnaire(lang);
+  const { pageRealisations } = await dictionnaire(lang);
   return {
     title: pageRealisations.meta.titre,
     description: pageRealisations.meta.description,
@@ -20,8 +21,11 @@ export async function generateMetadata(): Promise<Metadata> {
 
 /** Réalisations (adresse `/labo` conservée pour l'architecture). */
 export default async function Labo() {
+  const lang = await getLang();
   const dict = await getDictionnaire();
   const t = dict.pageRealisations;
+  const realisations = await realisationsPubliees();
+  const avis = await avisPublies();
 
   return (
     <>
@@ -41,8 +45,10 @@ export default async function Labo() {
           <TitreSection surtitre={t.signature.surtitre} titre={t.signature.titre} texte={t.signature.texte} />
 
           <div className="mt-12 flex flex-col">
-            {t.signature.items.map((sujet, i) => (
-              <div key={sujet.titre}>
+            {realisations.map(({ id, contenu }, i) => {
+              const sujet = { rubrique: contenu[lang].categorie, titre: contenu[lang].titre, texte: contenu[lang].texte };
+              return (
+              <div key={id}>
                 {i > 0 && <Divider />}
                 <div className="grid gap-4 py-8 lg:grid-cols-[220px_1fr_auto] lg:items-baseline lg:gap-10">
                   <p className="t-label-sm text-encre/45">{sujet.rubrique}</p>
@@ -57,14 +63,15 @@ export default async function Labo() {
                   <p className="t-label-sm text-accent">{t.signature.signe}</p>
                 </div>
               </div>
-            ))}
+              );
+            })}
             <Divider />
           </div>
         </Container>
       </Section>
 
       {/* Laisser un avis : le formulaire se déplie au clic */}
-      <AvisSection textes={dict.avis} />
+      <AvisSection textes={dict.avis} avis={avis} lang={lang} />
     </>
   );
 }

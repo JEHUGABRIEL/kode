@@ -1,22 +1,35 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { site, waLink } from "@/lib/site";
-import { Check, Close, Mail, Quote, Star, WhatsApp } from "./icons";
-import { Container, Overline } from "./ui";
+import { useActionState, useEffect, useRef, useState } from "react";
+import { envoyerAvis, type EtatEnvoi } from "@/lib/actions-publiques";
+import type { Langue } from "@/i18n/config";
 import type { Dictionnaire } from "@/i18n/dictionnaires/fr";
+import type { Avis } from "@/lib/types";
+import { Check, Close, Quote, Star } from "./icons";
+import { Container, Overline } from "./ui";
 
 /**
- * « Laisser un avis » — KODÊ ne publie que de vrais retours. Le bandeau
- * présente la démarche ; le bouton déplie un formulaire (même animation
- * `grid-template-rows` que l'accordéon). Le site étant statique, l'avis
- * part pré-rédigé par WhatsApp ou par e-mail, comme le formulaire de contact.
+ * « Laisser un avis » — KODÊ ne publie que de vrais retours.
+ * 1. Les avis validés dans le back-office (/admin/avis) s'affichent en tête.
+ * 2. Le bandeau présente la démarche ; le bouton déplie un formulaire (même
+ *    animation `grid-template-rows` que l'accordéon).
+ * 3. L'avis est enregistré en base « en attente » : il n'apparaît sur le
+ *    site qu'une fois publié depuis le back-office.
  */
-export default function AvisSection({ textes: t }: { textes: Dictionnaire["avis"] }) {
+export default function AvisSection({
+  textes: t,
+  avis,
+  lang,
+}: {
+  textes: Dictionnaire["avis"];
+  avis: Avis[];
+  lang: Langue;
+}) {
   const [ouvert, setOuvert] = useState(false);
   const [note, setNote] = useState(0);
   const [survol, setSurvol] = useState(0);
-  const [statut, setStatut] = useState<string | null>(null);
+  const [alerteNote, setAlerteNote] = useState(false);
+  const [etat, action, enCours] = useActionState<EtatEnvoi, FormData>(envoyerAvis, { statut: "idle" });
   const refFormulaire = useRef<HTMLFormElement>(null);
   const premierChamp = useRef<HTMLInputElement>(null);
 
@@ -26,57 +39,61 @@ export default function AvisSection({ textes: t }: { textes: Dictionnaire["avis"
     return () => window.clearTimeout(minuteur);
   }, [ouvert]);
 
-  const envoyer = (canal: "whatsapp" | "email") => {
-    const formulaire = refFormulaire.current;
-    if (!formulaire || !formulaire.reportValidity()) return;
-    if (note === 0) {
-      setStatut(t.statutNote);
-      return;
-    }
-
-    const donnees = new FormData(formulaire);
-    const valeur = (cle: string) => String(donnees.get(cle) ?? "").trim() || "—";
-
-    const corps = [
-      t.message.entete,
-      "",
-      `${t.message.note} : ${"★".repeat(note)}${"☆".repeat(5 - note)} (${note}/5)`,
-      `${t.message.nom} : ${valeur("nom")}`,
-      `${t.message.fonction} : ${valeur("fonction")}`,
-      `${t.message.prestation} : ${valeur("prestation")}`,
-      "",
-      `${t.message.avis} :`,
-      valeur("avis"),
-      "",
-      t.message.accord,
-    ].join("\n");
-
-    if (canal === "email") {
-      window.location.href = `mailto:${site.email}?subject=${encodeURIComponent(
-        `${t.message.objet} — ${valeur("nom")}`,
-      )}&body=${encodeURIComponent(corps)}`;
-      setStatut(t.statutEmail);
-    } else {
-      window.open(waLink(corps), "_blank", "noopener");
-      setStatut(t.statutWhatsApp);
-    }
-  };
+  /* Après un envoi réussi, le formulaire est vidé. */
+  useEffect(() => {
+    if (etat.statut !== "merci") return;
+    refFormulaire.current?.reset();
+    const frame = requestAnimationFrame(() => setNote(0));
+    return () => cancelAnimationFrame(frame);
+  }, [etat]);
 
   const champ =
     "w-full border border-bordure bg-white px-4 py-3 text-[0.95rem] text-encre outline-none transition-colors duration-300 placeholder:text-encre/35 focus:border-accent";
   const etiquette = "t-label-sm text-encre/70";
   const affichee = survol || note;
 
+  const message = alerteNote
+    ? t.statutNote
+    : etat.statut === "merci"
+      ? t.statutMerci
+      : etat.statut === "invalide"
+        ? t.statutInvalide
+        : etat.statut === "erreur"
+          ? t.statutErreur
+          : null;
+
   return (
     <section id="avis" className="relative scroll-mt-28 bg-brun py-16 text-white md:py-24">
       <Container>
+        {/* Avis publiés */}
+        {avis.length > 0 && (
+          <div className="mb-16 md:mb-20">
+            <Overline ton="sombre">{t.publiesTitre}</Overline>
+            <p className="mt-3 max-w-xl text-[0.95rem] text-attenue-clair">{t.publiesTexte}</p>
+            <ul className="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+              {avis.map((a) => (
+                <li key={a.id} className="flex flex-col border border-filet bg-noir-doux/45 p-7">
+                  <div className="flex items-center gap-1 text-accent" aria-label={`${a.note}/5`}>
+                    {Array.from({ length: 5 }, (_, i) => (
+                      <Star key={i} className={`h-4 w-4 ${i < a.note ? "" : "opacity-25"}`} />
+                    ))}
+                  </div>
+                  <p className="mt-4 flex-1 text-[0.98rem] leading-relaxed text-creme">« {a.texte} »</p>
+                  <p className="t-label-sm mt-6 text-white">{a.nom}</p>
+                  <p className="mt-1 text-[0.85rem] text-attenue-clair">
+                    {[a.fonction, a.prestation].filter(Boolean).join(" · ")}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
         <div className="grid gap-12 lg:grid-cols-[1.15fr_1fr] lg:items-center lg:gap-20">
           <div>
             <Overline ton="sombre">{t.surtitre}</Overline>
             <h2 className="t-h2 mt-4 text-white">{t.titre}</h2>
-            <p className="mt-5 max-w-xl text-[1rem] leading-relaxed text-attenue-clair">
-              {t.texte}
-            </p>
+            <p className="mt-5 max-w-xl text-[1rem] leading-relaxed text-attenue-clair">{t.texte}</p>
             <ul className="mt-8 flex flex-col gap-3">
               {t.engagements.map((engagement) => (
                 <li key={engagement} className="flex items-center gap-3 text-[0.95rem] text-attenue-clair">
@@ -91,9 +108,7 @@ export default function AvisSection({ textes: t }: { textes: Dictionnaire["avis"
 
           <div className="relative border border-filet bg-noir-doux/45 p-8 lg:p-10">
             <Quote className="h-8 w-8 text-accent" />
-            <p className="t-serif mt-5 text-[1.35rem] leading-snug text-creme md:text-[1.6rem]">
-              {t.citation}
-            </p>
+            <p className="t-serif mt-5 text-[1.35rem] leading-snug text-creme md:text-[1.6rem]">{t.citation}</p>
             <div className="mt-6 flex items-center gap-1 text-accent" aria-hidden>
               {Array.from({ length: 5 }, (_, i) => (
                 <Star key={i} className="h-5 w-5" />
@@ -101,10 +116,7 @@ export default function AvisSection({ textes: t }: { textes: Dictionnaire["avis"
             </div>
             <button
               type="button"
-              onClick={() => {
-                setOuvert((valeur) => !valeur);
-                setStatut(null);
-              }}
+              onClick={() => setOuvert((valeur) => !valeur)}
               aria-expanded={ouvert}
               aria-controls="formulaire-avis"
               className="tr mt-8 inline-flex w-full items-center justify-center gap-3 bg-accent px-7 py-4 font-mono text-[0.82rem] font-bold uppercase tracking-[0.12em] text-noir-doux hover:bg-white"
@@ -129,10 +141,29 @@ export default function AvisSection({ textes: t }: { textes: Dictionnaire["avis"
           <div>
             <form
               ref={refFormulaire}
-              onSubmit={(e) => e.preventDefault()}
-              noValidate
+              action={action}
+              onSubmit={(e) => {
+                if (note === 0) {
+                  e.preventDefault();
+                  setAlerteNote(true);
+                  return;
+                }
+                setAlerteNote(false);
+              }}
               className="mt-12 grid gap-6 bg-white p-7 text-encre md:p-10"
             >
+              <input type="hidden" name="note" value={note} />
+              <input type="hidden" name="langue" value={lang} />
+              {/* Piège à robots : invisible et ignoré par les lecteurs d'écran */}
+              <input
+                type="text"
+                name="site_web"
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden
+                className="absolute -left-[9999px] h-0 w-0 opacity-0"
+              />
+
               <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
                 <h3 className="t-h4">{t.formTitre}</h3>
                 <p className="text-[0.88rem] text-encre/55">
@@ -151,7 +182,10 @@ export default function AvisSection({ textes: t }: { textes: Dictionnaire["avis"
                       <button
                         key={valeur}
                         type="button"
-                        onClick={() => setNote(valeur)}
+                        onClick={() => {
+                          setNote(valeur);
+                          setAlerteNote(false);
+                        }}
                         onMouseEnter={() => setSurvol(valeur)}
                         aria-label={`${valeur} ${valeur > 1 ? t.etoiles : t.etoile} ${t.sur5}`}
                         aria-pressed={note === valeur}
@@ -170,7 +204,16 @@ export default function AvisSection({ textes: t }: { textes: Dictionnaire["avis"
                   <label className={etiquette} htmlFor="avis-nom">
                     {t.nom} <span className="text-accent">*</span>
                   </label>
-                  <input ref={premierChamp} id="avis-nom" name="nom" required autoComplete="name" className={champ} />
+                  <input
+                    ref={premierChamp}
+                    id="avis-nom"
+                    name="nom"
+                    required
+                    minLength={2}
+                    maxLength={120}
+                    autoComplete="name"
+                    className={champ}
+                  />
                 </div>
                 <div className="grid gap-2">
                   <label className={etiquette} htmlFor="avis-fonction">
@@ -179,6 +222,7 @@ export default function AvisSection({ textes: t }: { textes: Dictionnaire["avis"
                   <input
                     id="avis-fonction"
                     name="fonction"
+                    maxLength={160}
                     autoComplete="organization-title"
                     placeholder={t.fonctionExemple}
                     className={champ}
@@ -209,6 +253,7 @@ export default function AvisSection({ textes: t }: { textes: Dictionnaire["avis"
                   required
                   rows={5}
                   minLength={20}
+                  maxLength={3000}
                   placeholder={t.avisExemple}
                   className={`${champ} resize-y`}
                 />
@@ -219,28 +264,27 @@ export default function AvisSection({ textes: t }: { textes: Dictionnaire["avis"
                 {t.accord}
               </label>
 
-              <div className="flex flex-wrap gap-3">
+              <div>
                 <button
-                  type="button"
-                  onClick={() => envoyer("whatsapp")}
-                  className="tr inline-flex items-center justify-center gap-2.5 bg-accent px-7 py-4 font-mono text-[0.8rem] font-bold uppercase tracking-[0.12em] text-noir-doux hover:bg-noir-doux hover:text-white"
+                  type="submit"
+                  disabled={enCours}
+                  className="tr inline-flex items-center justify-center gap-2.5 bg-accent px-8 py-4 font-mono text-[0.82rem] font-bold uppercase tracking-[0.12em] text-noir-doux hover:bg-noir-doux hover:text-white disabled:opacity-60"
                 >
-                  <WhatsApp className="h-[18px] w-[18px]" />
-                  {t.envoyerWhatsApp}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => envoyer("email")}
-                  className="tr inline-flex items-center justify-center gap-2.5 border border-encre/25 px-7 py-4 font-mono text-[0.8rem] font-bold uppercase tracking-[0.12em] text-encre hover:border-noir-doux hover:bg-noir-doux hover:text-white"
-                >
-                  <Mail className="h-[18px] w-[18px]" />
-                  {t.envoyerEmail}
+                  <Star className="h-4 w-4" />
+                  {enCours ? t.envoi : t.envoyer}
                 </button>
               </div>
 
-              {statut && (
-                <p role="status" className="border border-accent/60 bg-accent/10 px-4 py-3 text-[0.9rem] text-encre">
-                  {statut}
+              {message && (
+                <p
+                  role="status"
+                  className={`border px-4 py-3 text-[0.9rem] text-encre ${
+                    etat.statut === "merci" && !alerteNote
+                      ? "border-accent/60 bg-accent/10"
+                      : "border-red-700/40 bg-red-50"
+                  }`}
+                >
+                  {message}
                 </p>
               )}
             </form>

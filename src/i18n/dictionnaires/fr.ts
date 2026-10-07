@@ -309,36 +309,6 @@ export const fr = {
     texte: "Campagnes, événements et prises de parole conçus et produits par KODÊ à Bangui.",
     cta: "Voir toutes les réalisations",
     voir: "Voir la réalisation",
-    items: [
-      {
-        categorie: "Campagne",
-        titre: "Octobre Rose en RCA",
-        texte:
-          "Mobilisation de KODÊ contre le cancer du sein en Centrafrique : conception du visuel de campagne, message de prévention et diffusion sur les réseaux, pour une cause qui concerne chaque famille.",
-        livrables: ["Direction artistique", "Création de visuel", "Campagne sociale"],
-      },
-      {
-        categorie: "Événementiel",
-        titre: "Un événement de 40 personnes",
-        texte:
-          "Format intimiste entièrement pris en charge : scénographie, art de la table, décoration et coordination du déroulé jusqu’à l’aftermovie. Quarante invités, aucun détail laissé au hasard.",
-        livrables: ["Scénographie", "Décoration", "Coordination", "Aftermovie"],
-      },
-      {
-        categorie: "Marque",
-        titre: "Série « Vrai ou Faux »",
-        texte:
-          "Format éditorial récurrent qui interroge les idées reçues sur la communication d’entreprise et installe KODÊ comme voix experte à Bangui.",
-        livrables: ["Ligne éditoriale", "Design social", "Engagement"],
-      },
-      {
-        categorie: "Marque",
-        titre: "« Ministère de l’Événementiel »",
-        texte:
-          "Campagne de marque décalée sous forme d’arrêtés officiels, qui défend l’exigence et l’exécution maîtrisée dans l’événementiel centrafricain.",
-        livrables: ["Concept créatif", "Copywriting", "Série visuelle"],
-      },
-    ],
   },
 
   paroles: {
@@ -408,26 +378,6 @@ export const fr = {
     toutes: "Toutes les réalisations",
     carrousel: "Réalisations KODÊ",
     voir: "Voir",
-    items: [
-      {
-        tag: "Scénographie",
-        titre: "Donner vie aux espaces",
-        texte:
-          "Avant / après de transformation d’espaces à Bangui : quelques mètres carrés convertis en univers de marque, du plan à l’installation.",
-      },
-      {
-        tag: "Territoire",
-        titre: "Bangui, terrain de jeu",
-        texte:
-          "Série photographique valorisant la capitale centrafricaine — la ville comme décor et comme public des marques que nous accompagnons.",
-      },
-      {
-        tag: "Marque",
-        titre: "Série « Vrai ou Faux »",
-        texte:
-          "Format éditorial récurrent qui interroge les idées reçues sur la communication d’entreprise et installe KODÊ comme voix experte à Bangui.",
-      },
-    ],
   },
 
   carrieres: {
@@ -513,21 +463,14 @@ export const fr = {
     avis: "Votre avis",
     avisExemple: "Le contexte, ce qui a bien fonctionné, ce que vous retiendrez…",
     accord: "J’accepte que cet avis soit publié sur le site de KODÊ, avec mon nom et ma fonction.",
-    envoyerWhatsApp: "Envoyer via WhatsApp",
-    envoyerEmail: "Envoyer par e-mail",
+    envoyer: "Envoyer mon avis",
+    envoi: "Envoi…",
     statutNote: "Choisissez une note de 1 à 5 étoiles avant d’envoyer.",
-    statutEmail: "Votre messagerie s’ouvre avec l’avis pré-rédigé : il ne reste qu’à l’envoyer. Merci !",
-    statutWhatsApp: "WhatsApp s’ouvre avec votre avis pré-rédigé : il ne reste qu’à l’envoyer. Merci !",
-    message: {
-      entete: "Avis client pour KODÊ",
-      note: "Note",
-      nom: "Nom",
-      fonction: "Fonction / structure",
-      prestation: "Prestation",
-      avis: "Avis",
-      accord: "J’accepte que cet avis soit publié sur le site de KODÊ.",
-      objet: "Avis client",
-    },
+    statutMerci: "Merci ! Votre avis a bien été reçu : il sera publié après validation par notre équipe.",
+    statutErreur: "L’envoi n’a pas abouti. Réessayez dans un instant ou écrivez-nous sur WhatsApp.",
+    statutInvalide: "Vérifiez les champs obligatoires : nom, prestation et un avis d’au moins 20 caractères.",
+    publiesTitre: "Ils nous ont fait confiance",
+    publiesTexte: "Des avis vérifiés, publiés avec l’accord de leurs auteurs.",
   },
 
   formulaire: {
@@ -824,26 +767,6 @@ export const fr = {
       texte:
         "Chaque projet part du même point : comprendre ce que le client veut obtenir. Puis nous construisons — un message, un décor, une campagne — jusqu’à ce que le résultat se retienne.",
       signe: "Signé KODÊ",
-      items: [
-        {
-          rubrique: "Campagne",
-          titre: "Octobre Rose en RCA",
-          texte:
-            "Mobilisation contre le cancer du sein en Centrafrique : conception du visuel de campagne, message de prévention et diffusion sur les réseaux.",
-        },
-        {
-          rubrique: "Événementiel",
-          titre: "Un événement de 40 personnes",
-          texte:
-            "Format intimiste entièrement pris en charge : scénographie, art de la table, décoration et coordination du déroulé jusqu’à l’aftermovie.",
-        },
-        {
-          rubrique: "Marque",
-          titre: "« Ministère de l’Événementiel »",
-          texte:
-            "Campagne de marque décalée sous forme d’arrêtés officiels, qui défend l’exigence et l’exécution maîtrisée dans l’événementiel centrafricain.",
-        },
-      ],
     },
   },
 

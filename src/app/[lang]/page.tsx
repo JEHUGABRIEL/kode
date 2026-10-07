@@ -15,7 +15,7 @@ import { dictionnaire, getLang } from "@/i18n/serveur";
 
 export async function generateMetadata(): Promise<Metadata> {
   const lang = await getLang();
-  const { meta } = dictionnaire(lang);
+  const { meta } = await dictionnaire(lang);
   return {
     title: { absolute: meta.titreDefaut },
     description: meta.accueilDescription,

@@ -9,7 +9,7 @@ import { img, site, waLink } from "@/lib/site";
 
 export async function generateMetadata(): Promise<Metadata> {
   const lang = await getLang();
-  const { contact } = dictionnaire(lang);
+  const { contact } = await dictionnaire(lang);
   return {
     title: contact.meta.titre,
     description: contact.meta.description,
@@ -18,6 +18,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Contact() {
+  const lang = await getLang();
   const dict = await getDictionnaire();
   const t = dict.contact;
 
@@ -104,7 +105,7 @@ export default async function Contact() {
               <h2 className="t-h4">{t.formulaire.titre}</h2>
               <p className="mt-3 text-[0.95rem] leading-relaxed text-encre/70">{t.formulaire.texte}</p>
               <div className="mt-8">
-                <ContactForm textes={dict.formulaire} />
+                <ContactForm textes={dict.formulaire} lang={lang} />
               </div>
             </div>
           </div>

@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { DM_Serif_Display, Roboto, Roboto_Mono } from "next/font/google";
 import CookieConsent from "@/components/CookieConsent";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
@@ -7,31 +6,8 @@ import WhatsAppFloat from "@/components/WhatsAppFloat";
 import { langues, locales, alternates } from "@/i18n/config";
 import { dictionnaire, getDictionnaire, getLang } from "@/i18n/serveur";
 import { site } from "@/lib/site";
+import { chasseFixe, editorial, texteCourant } from "../polices";
 import "../globals.css";
-
-/* Polices Google du site de référence (§2) : les titres sont en chasse
-   fixe (Roboto Mono 700), le texte courant en Roboto, et DM Serif Display
-   sert d'accent éditorial ponctuel. */
-const chasseFixe = Roboto_Mono({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  variable: "--font-roboto-mono",
-  display: "swap",
-});
-
-const texteCourant = Roboto({
-  subsets: ["latin"],
-  weight: ["400", "500", "700"],
-  variable: "--font-roboto",
-  display: "swap",
-});
-
-const editorial = DM_Serif_Display({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--font-dm-serif",
-  display: "swap",
-});
 
 /** Les deux langues sont générées à la construction (rendu statique). */
 export function generateStaticParams() {
@@ -40,7 +16,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata(): Promise<Metadata> {
   const lang = await getLang();
-  const dict = dictionnaire(lang);
+  const dict = await dictionnaire(lang);
   return {
     metadataBase: new URL(site.url),
     title: {

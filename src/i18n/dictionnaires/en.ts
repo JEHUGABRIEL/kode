@@ -304,36 +304,6 @@ export const en: Dictionnaire = {
     texte: "Campaigns, events and brand voices designed and produced by KODÊ in Bangui.",
     cta: "See all our work",
     voir: "View project",
-    items: [
-      {
-        categorie: "Campaign",
-        titre: "Pink October in the CAR",
-        texte:
-          "KODÊ’s breast cancer awareness drive in the Central African Republic: campaign visual, prevention message and social media distribution, for a cause that touches every family.",
-        livrables: ["Art direction", "Visual design", "Social campaign"],
-      },
-      {
-        categorie: "Event",
-        titre: "An event for 40 guests",
-        texte:
-          "An intimate format handled from start to finish: set design, table styling, decoration and coordination of the schedule, right through to the aftermovie. Forty guests, no detail left to chance.",
-        livrables: ["Set design", "Decoration", "Coordination", "Aftermovie"],
-      },
-      {
-        categorie: "Brand",
-        titre: "The “True or False” series",
-        texte:
-          "A recurring editorial format that challenges common misconceptions about business communication and establishes KODÊ as an expert voice in Bangui.",
-        livrables: ["Editorial line", "Social design", "Engagement"],
-      },
-      {
-        categorie: "Brand",
-        titre: "“Ministry of Events”",
-        texte:
-          "A tongue-in-cheek brand campaign styled as official decrees, championing high standards and controlled execution in Central African events.",
-        livrables: ["Creative concept", "Copywriting", "Visual series"],
-      },
-    ],
   },
 
   paroles: {
@@ -401,26 +371,6 @@ export const en: Dictionnaire = {
     toutes: "All our work",
     carrousel: "KODÊ projects",
     voir: "View",
-    items: [
-      {
-        tag: "Set design",
-        titre: "Bringing spaces to life",
-        texte:
-          "Before / after transformations of spaces in Bangui: a few square metres turned into a brand universe, from floor plan to installation.",
-      },
-      {
-        tag: "Territory",
-        titre: "Bangui, our playground",
-        texte:
-          "A photo series celebrating the Central African capital — the city as both a backdrop and an audience for the brands we support.",
-      },
-      {
-        tag: "Brand",
-        titre: "The “True or False” series",
-        texte:
-          "A recurring editorial format that challenges common misconceptions about business communication and establishes KODÊ as an expert voice in Bangui.",
-      },
-    ],
   },
 
   carrieres: {
@@ -506,21 +456,14 @@ export const en: Dictionnaire = {
     avis: "Your review",
     avisExemple: "The context, what worked well, what you will remember…",
     accord: "I agree that this review may be published on the KODÊ website, with my name and job title.",
-    envoyerWhatsApp: "Send via WhatsApp",
-    envoyerEmail: "Send by email",
+    envoyer: "Send my review",
+    envoi: "Sending…",
     statutNote: "Please choose a rating from 1 to 5 stars before sending.",
-    statutEmail: "Your email app is opening with the review pre-filled: just hit send. Thank you!",
-    statutWhatsApp: "WhatsApp is opening with your review pre-filled: just hit send. Thank you!",
-    message: {
-      entete: "Client review for KODÊ",
-      note: "Rating",
-      nom: "Name",
-      fonction: "Job title / organisation",
-      prestation: "Service",
-      avis: "Review",
-      accord: "I agree that this review may be published on the KODÊ website.",
-      objet: "Client review",
-    },
+    statutMerci: "Thank you! Your review has been received and will be published once our team has approved it.",
+    statutErreur: "Sending failed. Please try again in a moment or message us on WhatsApp.",
+    statutInvalide: "Please check the required fields: name, service and a review of at least 20 characters.",
+    publiesTitre: "They trusted us",
+    publiesTexte: "Verified reviews, published with their authors’ consent.",
   },
 
   formulaire: {
@@ -814,26 +757,6 @@ export const en: Dictionnaire = {
       texte:
         "Every project starts from the same point: understanding what the client wants to achieve. Then we build — a message, a set, a campaign — until the result sticks.",
       signe: "Signed KODÊ",
-      items: [
-        {
-          rubrique: "Campaign",
-          titre: "Pink October in the CAR",
-          texte:
-            "Breast cancer awareness in the Central African Republic: campaign visual, prevention message and social media distribution.",
-        },
-        {
-          rubrique: "Event",
-          titre: "An event for 40 guests",
-          texte:
-            "An intimate format handled from start to finish: set design, table styling, decoration and coordination of the schedule, right through to the aftermovie.",
-        },
-        {
-          rubrique: "Brand",
-          titre: "“Ministry of Events”",
-          texte:
-            "A tongue-in-cheek brand campaign styled as official decrees, championing high standards and controlled execution in Central African events.",
-        },
-      ],
     },
   },
 

@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { langueParDefaut, langues } from "@/i18n/config";
+import { COOKIE_SESSION, jetonValide } from "@/lib/session";
 
 /**
  * Routage des langues. Toutes les pages vivent sous `app/[lang]` :
@@ -8,9 +9,20 @@ import { langueParDefaut, langues } from "@/i18n/config";
  *                   par page française, pour le référencement) ;
  *   · le reste   → réécrit en interne vers `/fr/...` : le français reste
  *                   la langue par défaut, sans préfixe visible.
+ *
+ * Le back-office (/admin) n'est pas traduit. Contrôle optimiste de la
+ * session ici ; chaque page et chaque action du back-office le refait avec
+ * `exigerAdmin()`.
  */
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  if (pathname === "/admin" || pathname.startsWith("/admin/")) {
+    if (pathname !== "/admin/connexion" && !jetonValide(request.cookies.get(COOKIE_SESSION)?.value)) {
+      return NextResponse.redirect(new URL("/admin/connexion", request.url));
+    }
+    return NextResponse.next();
+  }
 
   const prefixe = langues.find((lang) => pathname === `/${lang}` || pathname.startsWith(`/${lang}/`));
 

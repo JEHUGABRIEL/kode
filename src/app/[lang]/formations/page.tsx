@@ -9,7 +9,7 @@ import { img, waLink } from "@/lib/site";
 
 export async function generateMetadata(): Promise<Metadata> {
   const lang = await getLang();
-  const { evenementiel } = dictionnaire(lang);
+  const { evenementiel } = await dictionnaire(lang);
   return {
     title: evenementiel.meta.titre,
     description: evenementiel.meta.description,
