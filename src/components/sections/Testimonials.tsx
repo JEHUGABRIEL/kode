@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Carousel from "@/components/Carousel";
-import { Quote } from "@/components/icons";
+import Link from "next/link";
+import { Quote, Star } from "@/components/icons";
 import { ColonneCollante, Container, Divider, Section, TitreSection } from "@/components/ui";
 import { img } from "@/lib/site";
 
@@ -49,6 +50,13 @@ export default function Testimonials() {
               Nous préférons publier de vrais retours plutôt que des phrases inventées. Vous
               avez travaillé avec KODÊ ? Votre témoignage a toute sa place ici.
             </p>
+            <Link
+              href="/labo#avis"
+              className="souligne-lien tr-couleur mt-6 inline-flex items-center gap-2.5 font-mono text-[0.82rem] font-bold uppercase tracking-[0.12em] text-encre hover:text-accent"
+            >
+              <Star className="h-4 w-4 text-accent" />
+              Laisser un avis
+            </Link>
           </ColonneCollante>
 
           <Carousel

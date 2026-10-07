@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import Insights from "@/components/sections/Insights";
 import PageHero from "@/components/sections/PageHero";
 import Reveal from "@/components/Reveal";
-import { Btn, Container, Divider, Section, TitreSection } from "@/components/ui";
-import { img, waLink } from "@/lib/site";
+import AvisSection from "@/components/AvisSection";
+import { Container, Divider, Section, TitreSection } from "@/components/ui";
+import { img } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Réalisations — campagnes, événements et scénographies",
@@ -76,22 +77,11 @@ export default function Labo() {
             <Divider />
           </div>
 
-          <div className="mt-12 grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
-            <p className="max-w-2xl text-[1rem] leading-relaxed text-encre/75">
-              Vous avez travaillé avec KODÊ ? Nous préférons publier de vrais retours plutôt que
-              des phrases inventées : votre témoignage a toute sa place ici.
-            </p>
-            <Btn
-              href={waLink("Bonjour KODÊ, je souhaite laisser un témoignage.")}
-              variante="contour"
-              externe
-              fleche
-            >
-              Laisser un témoignage
-            </Btn>
-          </div>
         </Container>
       </Section>
+
+      {/* Laisser un avis : le formulaire se déplie au clic */}
+      <AvisSection />
     </>
   );
 }

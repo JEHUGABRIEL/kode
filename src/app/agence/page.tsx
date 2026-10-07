@@ -156,7 +156,7 @@ export default function Agence() {
         </Container>
       </Section>
 
-      <Careers />
+      <Careers fond="gris" />
     </>
   );
 }

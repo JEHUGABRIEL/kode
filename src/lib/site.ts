@@ -24,6 +24,19 @@ export const site = {
 } as const;
 
 /**
+ * Réseaux sociaux. Facebook et WhatsApp sont les comptes réels ; Instagram,
+ * TikTok et LinkedIn pointent sur `#` en attendant les adresses des pages
+ * (comme sur le site KODÊ d'origine).
+ */
+export const reseaux = [
+  { nom: "Facebook", href: "https://www.facebook.com/profile.php?id=61584902049592" },
+  { nom: "Instagram", href: "#" },
+  { nom: "TikTok", href: "#" },
+  { nom: "LinkedIn", href: "#" },
+  { nom: "WhatsApp", href: "https://wa.me/23670085053" },
+] as const;
+
+/**
  * Navigation principale : 5 entrées. Les adresses `/formations` et `/labo`
  * sont conservées pour garder l'architecture : elles portent désormais le
  * pôle Événementiel et les Réalisations.

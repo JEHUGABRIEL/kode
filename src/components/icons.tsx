@@ -164,3 +164,17 @@ export const LinkedIn = (p: P) => (
     <path d="M4.5 3.5a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM3 9h3v12H3zM10 9h2.9v1.7h.1c.4-.8 1.5-1.7 3-1.7 3.2 0 3.8 2.1 3.8 4.8V21h-3v-5.5c0-1.3 0-3-1.8-3s-2.1 1.4-2.1 2.9V21h-3Z" />
   </svg>
 );
+
+export const Instagram = (p: P) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" {...p}>
+    <rect x="3" y="3" width="18" height="18" rx="5" />
+    <circle cx="12" cy="12" r="4" />
+    <path d="M17.5 6.5h.01" />
+  </svg>
+);
+
+export const TikTok = (p: P) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" {...p}>
+    <path d="M16.6 3c.4 2.2 1.8 3.7 4 3.9v3.1a7 7 0 0 1-4-1.3v6.4a6.1 6.1 0 1 1-6.1-6.1c.3 0 .7 0 1 .1v3.2a3 3 0 1 0 2 2.8V3h3.1Z" />
+  </svg>
+);

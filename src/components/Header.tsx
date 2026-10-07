@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import LangSwitch from "./LangSwitch";
 import PanneauContact from "./PanneauContact";
 import { Calendar, Phone } from "./icons";
 import { assets, nav, navCta, site, waLink } from "@/lib/site";
@@ -119,6 +120,8 @@ export default function Header() {
               ))}
             </nav>
 
+            <LangSwitch ton="sombre" className="mt-8 text-[14px]" />
+
             <div className="mt-8 flex flex-col gap-3">
               <Link
                 href={navCta.href}
@@ -180,6 +183,8 @@ function Barre({ entrees, onOuvrir }: { entrees: Entree[]; onOuvrir: () => void 
       </nav>
 
       <div className="ml-auto flex items-stretch">
+        <LangSwitch className="mr-4 sm:mr-6" />
+
         <Link href={navCta.href} className="btn-entete hidden lg:inline-flex">
           {navCta.label}
           <Calendar className="h-4 w-4" />
