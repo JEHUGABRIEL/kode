@@ -1,3 +1,4 @@
+import { getDictionnaire } from "@/i18n/serveur";
 import { waLink } from "@/lib/site";
 import { WhatsApp } from "./icons";
 
@@ -10,18 +11,20 @@ import { WhatsApp } from "./icons";
  * animations du plugin Click-to-Chat : rebond permanent (`ctcBounce`) et
  * halo qui pulse (`ht_ctc_anim_corner`).
  */
-export default function WhatsAppFloat() {
+export default async function WhatsAppFloat() {
+  const { whatsapp } = await getDictionnaire();
+
   return (
     <a
-      href={waLink("Bonjour KODÊ, je souhaite parler de mon projet.")}
+      href={waLink(whatsapp.message)}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label="Discuter avec KODÊ sur WhatsApp"
+      aria-label={whatsapp.aria}
       className="ctc-flottant tr flex items-center gap-2.5 rounded-full bg-whatsapp px-4 py-3.5 text-white shadow-[0_12px_32px_-12px_rgba(37,211,102,.95)]"
     >
       <WhatsApp className="h-[22px] w-[22px] shrink-0" />
       <span className="whitespace-nowrap text-[14px] font-medium leading-none">
-        Une Question&nbsp;?
+        {whatsapp.bulle}
       </span>
     </a>
   );

@@ -1,12 +1,13 @@
 import type { Metadata, Viewport } from "next";
 import { DM_Serif_Display, Roboto, Roboto_Mono } from "next/font/google";
-import type { ReactNode } from "react";
 import CookieConsent from "@/components/CookieConsent";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
+import { langues, locales, alternates } from "@/i18n/config";
+import { dictionnaire, getDictionnaire, getLang } from "@/i18n/serveur";
 import { site } from "@/lib/site";
-import "./globals.css";
+import "../globals.css";
 
 /* Polices Google du site de référence (§2) : les titres sont en chasse
    fixe (Roboto Mono 700), le texte courant en Roboto, et DM Serif Display
@@ -32,42 +33,52 @@ const editorial = DM_Serif_Display({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL(site.url),
-  title: {
-    default: "KODÊ — Agence de Communication & d’Événementiel à Bangui, RCA",
-    template: "%s | KODÊ",
-  },
-  description:
-    "KODÊ est l’agence créative de communication et d’événementiel à Bangui, Centrafrique : stratégie, branding, marketing digital, organisation d’événements, scénographie, décoration et impressions.",
-  applicationName: site.name,
-  authors: [{ name: site.name }],
-  creator: site.name,
-  publisher: site.name,
-  openGraph: {
-    type: "website",
-    siteName: site.name,
-    locale: "fr_FR",
-    url: site.url,
-    title: "KODÊ — Agence de Communication & d’Événementiel à Bangui, RCA",
-    description:
-      "Stratégie, branding, marketing digital, organisation d’événements, scénographie et impressions : l’agence créative de Bangui.",
-    images: ["/img/kode-logo.jpg"],
-  },
-  alternates: { canonical: "/" },
-};
+/** Les deux langues sont générées à la construction (rendu statique). */
+export function generateStaticParams() {
+  return langues.map((lang) => ({ lang }));
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const lang = await getLang();
+  const dict = dictionnaire(lang);
+  return {
+    metadataBase: new URL(site.url),
+    title: {
+      default: dict.meta.titreDefaut,
+      template: "%s | KODÊ",
+    },
+    description: dict.meta.description,
+    applicationName: site.name,
+    authors: [{ name: site.name }],
+    creator: site.name,
+    publisher: site.name,
+    openGraph: {
+      type: "website",
+      siteName: site.name,
+      locale: locales[lang].og,
+      alternateLocale: langues.filter((l) => l !== lang).map((l) => locales[l].og),
+      url: site.url,
+      title: dict.meta.titreDefaut,
+      description: dict.meta.ogDescription,
+      images: ["/img/kode-logo.jpg"],
+    },
+    alternates: alternates(lang, "/"),
+  };
+}
 
 export const viewport: Viewport = {
   themeColor: "#5B2904",
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default async function RootLayout({ children }: LayoutProps<"/[lang]">) {
+  const lang = await getLang();
+  const dict = await getDictionnaire();
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
     name: site.name,
-    description:
-      "Agence créative de communication et d’événementiel à Bangui : stratégie, branding, marketing digital, organisation d’événements, scénographie, décoration et impressions.",
+    description: dict.meta.jsonLd,
     url: site.url,
     logo: `${site.url}/img/kode-logo.jpg`,
     telephone: site.phoneRaw,
@@ -80,16 +91,16 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     },
     areaServed: [
       { "@type": "City", name: "Bangui" },
-      { "@type": "Country", name: site.country },
+      { "@type": "Country", name: dict.commun.pays },
     ],
     sameAs: [site.facebook],
-    knowsLanguage: ["fr", "sg"],
+    knowsLanguage: ["fr", "en", "sg"],
     priceRange: "$$",
   };
 
   return (
     <html
-      lang="fr-FR"
+      lang={locales[lang].html}
       className={`${chasseFixe.variable} ${texteCourant.variable} ${editorial.variable}`}
     >
       <body>
@@ -97,16 +108,16 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           href="#principal"
           className="sr-only focus:not-sr-only focus:absolute focus:left-0 focus:top-0 focus:z-[200] focus:bg-accent focus:px-5 focus:py-3 focus:font-mono focus:text-[0.8rem] focus:font-bold focus:uppercase focus:text-noir-doux"
         >
-          Aller au contenu
+          {dict.commun.allerAuContenu}
         </a>
 
-        <Header />
+        <Header lang={lang} pages={dict.pages} entete={dict.entete} langue={dict.langue} panneau={dict.panneau} />
 
         <main id="principal">{children}</main>
 
         <Footer />
 
-        <CookieConsent />
+        <CookieConsent textes={dict.cookies} />
 
         <WhatsAppFloat />
 

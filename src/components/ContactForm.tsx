@@ -3,36 +3,14 @@
 import { useRef, useState } from "react";
 import { site, waLink } from "@/lib/site";
 import { Mail, WhatsApp } from "./icons";
-
-const BESOINS = [
-  "Organisation d’événement",
-  "Scénographie & décoration",
-  "Stratégie de communication",
-  "Branding & identité visuelle",
-  "Marketing digital & réseaux sociaux",
-  "Publicité & médias",
-  "Impressions & signalétique",
-  "Protocole & hôtesses",
-  "Location de matériel",
-  "Production photo / vidéo",
-  "Création de site web",
-  "Autre / je ne sais pas encore",
-];
-
-const BUDGETS = [
-  "Moins de 250 000 FCFA",
-  "250 000 – 1 000 000 FCFA",
-  "1 000 000 – 5 000 000 FCFA",
-  "Plus de 5 000 000 FCFA",
-  "À définir ensemble",
-];
+import type { Dictionnaire } from "@/i18n/dictionnaires/fr";
 
 /**
  * Site statique : le formulaire pré-remplit WhatsApp ou le client e-mail.
  * Pour recevoir les demandes côté serveur, brancher une Server Action et
  * remplacer `envoyer`.
  */
-export default function ContactForm() {
+export default function ContactForm({ textes: t }: { textes: Dictionnaire["formulaire"] }) {
   const refFormulaire = useRef<HTMLFormElement>(null);
   const [statut, setStatut] = useState<string | null>(null);
 
@@ -44,27 +22,27 @@ export default function ContactForm() {
     const valeur = (cle: string) => String(donnees.get(cle) ?? "").trim() || "—";
 
     const corps = [
-      "Nouvelle demande depuis kode-rca.com",
+      t.message.entete,
       "",
-      `Nom : ${valeur("nom")}`,
-      `Structure : ${valeur("structure")}`,
-      `E-mail : ${valeur("email")}`,
-      `Téléphone : ${valeur("telephone")}`,
-      `Besoin : ${valeur("besoin")}`,
-      `Budget : ${valeur("budget")}`,
+      `${t.message.nom} : ${valeur("nom")}`,
+      `${t.message.structure} : ${valeur("structure")}`,
+      `${t.message.email} : ${valeur("email")}`,
+      `${t.message.telephone} : ${valeur("telephone")}`,
+      `${t.message.besoin} : ${valeur("besoin")}`,
+      `${t.message.budget} : ${valeur("budget")}`,
       "",
-      "Message :",
+      `${t.message.projet} :`,
       valeur("message"),
     ].join("\n");
 
     if (canal === "email") {
       window.location.href = `mailto:${site.email}?subject=${encodeURIComponent(
-        `Demande de devis — ${valeur("nom")}`,
+        `${t.message.objet} — ${valeur("nom")}`,
       )}&body=${encodeURIComponent(corps)}`;
-      setStatut("Votre client e-mail s’ouvre avec la demande pré-remplie.");
+      setStatut(t.statutEmail);
     } else {
       window.open(waLink(corps), "_blank", "noopener");
-      setStatut("WhatsApp s’ouvre avec la demande pré-remplie : il ne reste qu’à l’envoyer.");
+      setStatut(t.statutWhatsApp);
     }
   };
 
@@ -77,13 +55,13 @@ export default function ContactForm() {
       <div className="grid gap-5 sm:grid-cols-2">
         <div className="grid gap-2">
           <label className={etiquette} htmlFor="nom">
-            Nom complet <span className="text-accent">*</span>
+            {t.nom} <span className="text-accent">*</span>
           </label>
           <input id="nom" name="nom" required autoComplete="name" className={champ} />
         </div>
         <div className="grid gap-2">
           <label className={etiquette} htmlFor="structure">
-            Entreprise / structure
+            {t.structure}
           </label>
           <input id="structure" name="structure" autoComplete="organization" className={champ} />
         </div>
@@ -92,13 +70,13 @@ export default function ContactForm() {
       <div className="grid gap-5 sm:grid-cols-2">
         <div className="grid gap-2">
           <label className={etiquette} htmlFor="email">
-            E-mail <span className="text-accent">*</span>
+            {t.email} <span className="text-accent">*</span>
           </label>
           <input id="email" name="email" type="email" required autoComplete="email" className={champ} />
         </div>
         <div className="grid gap-2">
           <label className={etiquette} htmlFor="telephone">
-            Téléphone / WhatsApp
+            {t.telephone}
           </label>
           <input
             id="telephone"
@@ -114,24 +92,24 @@ export default function ContactForm() {
       <div className="grid gap-5 sm:grid-cols-2">
         <div className="grid gap-2">
           <label className={etiquette} htmlFor="besoin">
-            Service souhaité <span className="text-accent">*</span>
+            {t.besoin} <span className="text-accent">*</span>
           </label>
           <select id="besoin" name="besoin" required defaultValue="" className={champ}>
             <option value="" disabled>
-              Choisir un service
+              {t.choisir}
             </option>
-            {BESOINS.map((besoin) => (
+            {t.besoins.map((besoin) => (
               <option key={besoin}>{besoin}</option>
             ))}
           </select>
         </div>
         <div className="grid gap-2">
           <label className={etiquette} htmlFor="budget">
-            Budget envisagé
+            {t.budget}
           </label>
           <select id="budget" name="budget" defaultValue="" className={champ}>
-            <option value="">Non défini</option>
-            {BUDGETS.map((budget) => (
+            <option value="">{t.nonDefini}</option>
+            {t.budgets.map((budget) => (
               <option key={budget}>{budget}</option>
             ))}
           </select>
@@ -140,14 +118,14 @@ export default function ContactForm() {
 
       <div className="grid gap-2">
         <label className={etiquette} htmlFor="message">
-          Votre projet <span className="text-accent">*</span>
+          {t.projet} <span className="text-accent">*</span>
         </label>
         <textarea
           id="message"
           name="message"
           required
           rows={6}
-          placeholder="Contexte, objectifs, délais…"
+          placeholder={t.projetExemple}
           className={`${champ} resize-y`}
         />
       </div>
@@ -159,7 +137,7 @@ export default function ContactForm() {
           className="tr inline-flex items-center justify-center gap-2.5 bg-accent px-7 py-4 font-mono text-[0.8rem] font-bold uppercase tracking-[0.12em] text-noir-doux hover:bg-noir-doux hover:text-white"
         >
           <WhatsApp className="h-[18px] w-[18px]" />
-          Envoyer via WhatsApp
+          {t.envoyerWhatsApp}
         </button>
         <button
           type="button"
@@ -167,7 +145,7 @@ export default function ContactForm() {
           className="tr inline-flex items-center justify-center gap-2.5 border border-encre/25 px-7 py-4 font-mono text-[0.8rem] font-bold uppercase tracking-[0.12em] text-encre hover:border-noir-doux hover:bg-noir-doux hover:text-white"
         >
           <Mail className="h-[18px] w-[18px]" />
-          Envoyer par e-mail
+          {t.envoyerEmail}
         </button>
       </div>
 
@@ -178,8 +156,7 @@ export default function ContactForm() {
       )}
 
       <p className="text-[0.84rem] text-encre/60">
-        Vos informations ne servent qu’à traiter votre demande. Elles ne sont ni revendues,
-        ni partagées.
+        {t.confidentialite}
       </p>
     </form>
   );

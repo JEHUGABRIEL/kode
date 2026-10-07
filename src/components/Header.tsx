@@ -7,9 +7,20 @@ import { useCallback, useEffect, useState } from "react";
 import LangSwitch from "./LangSwitch";
 import PanneauContact from "./PanneauContact";
 import { Calendar, Phone } from "./icons";
+import { localiser, sansPrefixe, type Langue } from "@/i18n/config";
+import type { Dictionnaire } from "@/i18n/dictionnaires/fr";
 import { assets, nav, navCta, site, waLink } from "@/lib/site";
 
 type Entree = { href: string; label: string; actif: boolean };
+
+type Textes = {
+  entete: Dictionnaire["entete"];
+  accueil: string;
+  cta: string;
+  ouvrir: () => void;
+  lang: Langue;
+  langue: Dictionnaire["langue"];
+};
 
 /**
  * En-tête du site (§5 bloc 1) : barre de 88 px sur fond blanc, filet bas,
@@ -28,8 +39,22 @@ type Entree = { href: string; label: string; actif: boolean };
  * si bien que le verrouillage du défilement correspond toujours à un
  * panneau visible.
  */
-export default function Header() {
-  const chemin = usePathname();
+export default function Header({
+  lang,
+  pages,
+  entete,
+  langue,
+  panneau,
+}: {
+  lang: Langue;
+  pages: Dictionnaire["pages"];
+  entete: Dictionnaire["entete"];
+  langue: Dictionnaire["langue"];
+  panneau: Dictionnaire["panneau"];
+}) {
+  /* Chemin sans préfixe de langue : identique au rendu serveur (`/fr/agence`)
+     et dans le navigateur (`/agence`), donc aucune erreur d'hydratation. */
+  const chemin = sansPrefixe(usePathname());
   const [collant, setCollant] = useState(false);
   const [prete, setPrete] = useState(false);
   const [menu, setMenu] = useState(false);
@@ -52,20 +77,29 @@ export default function Header() {
 
   const fermer = useCallback(() => setMenu(false), []);
 
-  const entrees: Entree[] = nav.map((item) => ({
-    href: item.href,
-    label: item.label,
-    actif: chemin === item.href,
+  const entrees: Entree[] = nav.map((href) => ({
+    href: localiser(lang, href),
+    label: pages[href],
+    actif: chemin === href,
   }));
+
+  const textes: Textes = {
+    entete,
+    accueil: localiser(lang, "/"),
+    cta: localiser(lang, navCta),
+    ouvrir: () => setMenu(true),
+    lang,
+    langue,
+  };
 
   return (
     <>
       <header className="entete relative z-50">
-        <Barre entrees={entrees} onOuvrir={() => setMenu(true)} />
+        <Barre entrees={entrees} textes={textes} />
       </header>
 
       {/* Panneau « Contactez-nous » : bureau seulement (§5) */}
-      <PanneauContact ouvert={menu} onFermer={fermer} />
+      <PanneauContact ouvert={menu} onFermer={fermer} lang={lang} textes={panneau} />
 
       {/* Clone fixe : invisible 90 % de la seconde, puis apparition nette */}
       {collant && (
@@ -75,7 +109,7 @@ export default function Header() {
             prete ? "" : "pointer-events-none"
           }`}
         >
-          <Barre entrees={entrees} onOuvrir={() => setMenu(true)} />
+          <Barre entrees={entrees} textes={textes} />
         </div>
       )}
 
@@ -84,7 +118,7 @@ export default function Header() {
         <div className="fixed inset-0 z-[110] lg:hidden">
           <button
             type="button"
-            aria-label="Fermer le menu"
+            aria-label={entete.fermerMenu}
             onClick={() => setMenu(false)}
             className="voile-menu absolute inset-0 bg-noir-doux/70"
           />
@@ -96,7 +130,7 @@ export default function Header() {
               <button
                 type="button"
                 onClick={() => setMenu(false)}
-                aria-label="Fermer le menu"
+                aria-label={entete.fermerMenu}
                 className="flex h-10 w-10 items-center justify-center border border-white/25 text-white"
               >
                 <span className="relative block h-4 w-4">
@@ -106,7 +140,7 @@ export default function Header() {
               </button>
             </div>
 
-            <nav className="mt-10 flex flex-col" aria-label="Navigation">
+            <nav className="mt-10 flex flex-col" aria-label={entete.navigation}>
               {entrees.map((entree) => (
                 <Link
                   key={entree.href}
@@ -120,15 +154,15 @@ export default function Header() {
               ))}
             </nav>
 
-            <LangSwitch ton="sombre" className="mt-8 text-[14px]" />
+            <LangSwitch lang={lang} textes={langue} ton="sombre" className="mt-8" />
 
             <div className="mt-8 flex flex-col gap-3">
               <Link
-                href={navCta.href}
+                href={textes.cta}
                 onClick={() => setMenu(false)}
                 className="btn-entete h-auto justify-center py-4 text-white"
               >
-                {navCta.label}
+                {entete.cta}
                 <Calendar className="h-4 w-4" />
               </Link>
               <a
@@ -154,10 +188,10 @@ export default function Header() {
   );
 }
 
-function Barre({ entrees, onOuvrir }: { entrees: Entree[]; onOuvrir: () => void }) {
+function Barre({ entrees, textes }: { entrees: Entree[]; textes: Textes }) {
   return (
     <div className="flex h-[88px] items-stretch pl-[30px]">
-      <Link href="/" className="flex items-center" aria-label={`${site.name} — accueil`}>
+      <Link href={textes.accueil} className="flex items-center" aria-label={`${site.name} — ${textes.entete.accueilAria}`}>
         <Image
           src={assets.logo}
           alt={site.name}
@@ -168,7 +202,7 @@ function Barre({ entrees, onOuvrir }: { entrees: Entree[]; onOuvrir: () => void 
         />
       </Link>
 
-      <nav className="ml-[132px] hidden items-stretch lg:flex" aria-label="Navigation">
+      <nav className="ml-[132px] hidden items-stretch lg:flex" aria-label={textes.entete.navigation}>
         {entrees.map((entree) => (
           <Link
             key={entree.href}
@@ -182,10 +216,10 @@ function Barre({ entrees, onOuvrir }: { entrees: Entree[]; onOuvrir: () => void 
       </nav>
 
       <div className="ml-auto flex items-stretch">
-        <LangSwitch className="mr-4 sm:mr-6" />
+        <LangSwitch lang={textes.lang} textes={textes.langue} className="mr-4 self-center sm:mr-6" />
 
-        <Link href={navCta.href} className="btn-entete hidden lg:inline-flex">
-          {navCta.label}
+        <Link href={textes.cta} className="btn-entete hidden lg:inline-flex">
+          {textes.entete.cta}
           <Calendar className="h-4 w-4" />
         </Link>
 
@@ -194,8 +228,8 @@ function Barre({ entrees, onOuvrir }: { entrees: Entree[]; onOuvrir: () => void 
             points reprend celle du site de référence. */}
         <button
           type="button"
-          onClick={onOuvrir}
-          aria-label="Ouvrir le menu"
+          onClick={textes.ouvrir}
+          aria-label={textes.entete.ouvrirMenu}
           className="btn-burger-entete"
         >
           <span aria-hidden className="grid grid-cols-3 gap-[4px]">

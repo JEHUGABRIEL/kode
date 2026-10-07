@@ -11,6 +11,8 @@ import {
 } from "@/components/ui";
 import { ArrowRight } from "@/components/icons";
 import Reveal from "@/components/Reveal";
+import { localiser } from "@/i18n/config";
+import { getDictionnaire, getLang } from "@/i18n/serveur";
 import { img } from "@/lib/site";
 
 /**
@@ -25,54 +27,24 @@ import { img } from "@/lib/site";
  */
 const DELAIS = [200, 300, 400, 500] as const;
 
-const projets = [
-  {
-    categorie: "Campagne",
-    titre: "Octobre Rose en RCA",
-    texte:
-      "Mobilisation de KODÊ contre le cancer du sein en Centrafrique : conception du visuel de campagne, message de prévention et diffusion sur les réseaux, pour une cause qui concerne chaque famille.",
-    livrables: ["Direction artistique", "Création de visuel", "Campagne sociale"],
-    image: img.projets[0],
-  },
-  {
-    categorie: "Événementiel",
-    titre: "Un événement de 40 personnes",
-    texte:
-      "Format intimiste entièrement pris en charge : scénographie, art de la table, décoration et coordination du déroulé jusqu'à l'aftermovie. Quarante invités, aucun détail laissé au hasard.",
-    livrables: ["Scénographie", "Décoration", "Coordination", "Aftermovie"],
-    image: img.projets[1],
-  },
-  {
-    categorie: "Marque",
-    titre: "Série « Vrai ou Faux »",
-    texte:
-      "Format éditorial récurrent qui interroge les idées reçues sur la communication d'entreprise et installe KODÊ comme voix experte à Bangui.",
-    livrables: ["Ligne éditoriale", "Design social", "Engagement"],
-    image: img.projets[2],
-  },
-  {
-    categorie: "Marque",
-    titre: "« Ministère de l'Événementiel »",
-    texte:
-      "Campagne de marque décalée sous forme d'arrêtés officiels, qui défend l'exigence et l'exécution maîtrisée dans l'événementiel centrafricain.",
-    livrables: ["Concept créatif", "Copywriting", "Série visuelle"],
-    image: img.projets[3],
-  },
-];
+export default async function Projects() {
+  const lang = await getLang();
+  const { projets: t } = await getDictionnaire();
+  const projets = t.items.map((item, i) => ({ ...item, image: img.projets[i] }));
+  const lienRealisations = localiser(lang, "/labo");
 
-export default function Projects() {
   return (
     <Section fond="blanc">
       <Container>
         <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
           <TitreSection
-            surtitre="Récentes réalisations"
-            titre="Ce que nous avons signé dernièrement."
-            texte="Campagnes, événements et prises de parole conçus et produits par KODÊ à Bangui."
+            surtitre={t.surtitre}
+            titre={t.titre}
+            texte={t.texte}
           />
           <Reveal delai={300} className="shrink-0">
-            <Btn href="/labo" variante="contour" fleche>
-              Voir toutes les réalisations
+            <Btn href={lienRealisations} variante="contour" fleche>
+              {t.cta}
             </Btn>
           </Reveal>
         </div>
@@ -97,10 +69,10 @@ export default function Projects() {
                 <ListeIcones items={projet.livrables} className="mt-6" />
                 <div className="mt-7">
                   <Link
-                    href="/labo"
+                    href={lienRealisations}
                     className="souligne-lien tr-couleur inline-flex items-center gap-5 font-mono text-[0.82rem] font-bold uppercase tracking-[0.12em] text-encre hover:text-accent"
                   >
-                    Voir la réalisation
+                    {t.voir}
                     <ArrowRight className="h-[13px] w-[13px]" />
                   </Link>
                 </div>

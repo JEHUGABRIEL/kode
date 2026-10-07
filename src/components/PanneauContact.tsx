@@ -4,7 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { Fragment, useEffect, useRef } from "react";
 import { ArrowRight, Close } from "./icons";
-import { assets, panneau } from "@/lib/site";
+import { localiser, type Langue } from "@/i18n/config";
+import type { Dictionnaire } from "@/i18n/dictionnaires/fr";
+import { assets } from "@/lib/site";
 
 /**
  * Panneau latéral « Contactez-nous » (§5, pop-up 1493 du site de référence).
@@ -25,9 +27,13 @@ import { assets, panneau } from "@/lib/site";
 export default function PanneauContact({
   ouvert,
   onFermer,
+  lang,
+  textes: panneau,
 }: {
   ouvert: boolean;
   onFermer: () => void;
+  lang: Langue;
+  textes: Dictionnaire["panneau"];
 }) {
   const croix = useRef<HTMLButtonElement | null>(null);
 
@@ -56,7 +62,7 @@ export default function PanneauContact({
     <>
       <button
         type="button"
-        aria-label="Fermer le panneau"
+        aria-label={panneau.fermer}
         onClick={onFermer}
         className="voile-panneau"
       />
@@ -71,7 +77,7 @@ export default function PanneauContact({
           ref={croix}
           type="button"
           onClick={onFermer}
-          aria-label="Fermer le panneau"
+          aria-label={panneau.fermer}
           className="fermer-panneau"
         >
           <Close className="h-[26px] w-[26px]" />
@@ -102,10 +108,10 @@ export default function PanneauContact({
             <p>{panneau.texte}</p>
 
             <p className="mt-3">
-              Domaines :{" "}
+              {panneau.domainesLabel}{" "}
               {panneau.domaines.map((domaine, i) => {
-                const noeud = (panneau.domainesLies as readonly string[]).includes(domaine) ? (
-                  <Link href="/services" className="tr-couleur hover:text-accent hover:underline">
+                const noeud = panneau.domainesLies.includes(i) ? (
+                  <Link href={localiser(lang, "/services")} className="tr-couleur hover:text-accent hover:underline">
                     {domaine}
                   </Link>
                 ) : (
@@ -127,10 +133,10 @@ export default function PanneauContact({
         </div>
 
         <Link
-          href={panneau.cta.href}
+          href={localiser(lang, "/contact")}
           className="tr mt-auto mb-[86px] mr-[114px] flex h-[68px] items-center justify-center gap-3 bg-noir-doux px-6 font-mono text-[14px] font-bold tracking-[2px] text-white uppercase hover:bg-accent hover:text-noir-doux"
         >
-          {panneau.cta.label}
+          {panneau.cta}
           <ArrowRight className="h-4 w-4" />
         </Link>
       </aside>

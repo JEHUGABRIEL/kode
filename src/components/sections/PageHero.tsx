@@ -3,6 +3,8 @@ import Link from "next/link";
 import { ChevronRight } from "@/components/icons";
 import Reveal from "@/components/Reveal";
 import { Container } from "@/components/ui";
+import { localiser } from "@/i18n/config";
+import { getDictionnaire, getLang } from "@/i18n/serveur";
 
 /* Même conteneur que le héros de l'accueil : 1280 px, filets verticaux. */
 const CONTENEUR = "mx-auto w-full max-w-[1280px]";
@@ -13,7 +15,7 @@ const CONTENEUR = "mx-auto w-full max-w-[1280px]";
  * H1 en capitales), puis bandeau photo pleine largeur, net et sans voile,
  * animé par le même zoom Motion FX ; enfin le chapeau.
  */
-export default function PageHero({
+export default async function PageHero({
   surtitre,
   titre,
   texte,
@@ -26,16 +28,19 @@ export default function PageHero({
   image: string;
   fil: string;
 }) {
+  const lang = await getLang();
+  const { commun } = await getDictionnaire();
+
   return (
     <>
       <section className="bg-white">
         <div className={`${CONTENEUR} bloc-heros flex flex-col px-[30px] pb-[48px] pt-[40px]`}>
           <nav
             className="flex flex-wrap items-center gap-2 text-[0.82rem] text-encre/55"
-            aria-label="Fil d’Ariane"
+            aria-label={commun.filAriane}
           >
-            <Link href="/" className="tr-couleur hover:text-accent">
-              Accueil
+            <Link href={localiser(lang, "/")} className="tr-couleur hover:text-accent">
+              {commun.accueil}
             </Link>
             <ChevronRight className="h-3 w-3 opacity-60" />
             <span className="text-encre">{fil}</span>

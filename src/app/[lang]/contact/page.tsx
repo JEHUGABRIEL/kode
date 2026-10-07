@@ -3,41 +3,50 @@ import ContactForm from "@/components/ContactForm";
 import PageHero from "@/components/sections/PageHero";
 import { Container, Section, TitreSection } from "@/components/ui";
 import { Mail, Phone, Pin, WhatsApp } from "@/components/icons";
+import { alternates } from "@/i18n/config";
+import { dictionnaire, getDictionnaire, getLang } from "@/i18n/serveur";
 import { img, site, waLink } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Contact — parler de votre projet",
-  description: `Parlons de votre projet : téléphone et WhatsApp ${site.phoneDisplay}, ${site.email}. KODÊ, ${site.address}, ${site.city}, ${site.country}. Réponse sous 24 heures.`,
-  alternates: { canonical: "/contact" },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const lang = await getLang();
+  const { contact } = dictionnaire(lang);
+  return {
+    title: contact.meta.titre,
+    description: contact.meta.description,
+    alternates: alternates(lang, "/contact"),
+  };
+}
 
-export default function Contact() {
+export default async function Contact() {
+  const dict = await getDictionnaire();
+  const t = dict.contact;
+
   const coordonnees = [
     {
       Icone: Phone,
-      etiquette: "Téléphone",
+      etiquette: t.coordonnees.telephone,
       valeur: site.phoneDisplay,
       href: `tel:${site.phoneRaw}`,
       externe: false,
     },
     {
       Icone: WhatsApp,
-      etiquette: "WhatsApp",
-      valeur: "Discuter maintenant",
-      href: waLink("Bonjour KODÊ, je souhaite parler de mon projet."),
+      etiquette: t.coordonnees.whatsapp,
+      valeur: t.coordonnees.discuter,
+      href: waLink(dict.whatsapp.message),
       externe: true,
     },
     {
       Icone: Mail,
-      etiquette: "E-mail",
+      etiquette: t.coordonnees.email,
       valeur: site.email,
       href: `mailto:${site.email}`,
       externe: false,
     },
     {
       Icone: Pin,
-      etiquette: "Où nous trouver",
-      valeur: `${site.address}, ${site.city} — ${site.country}`,
+      etiquette: t.coordonnees.adresse,
+      valeur: `${dict.commun.adresse}, ${site.city} — ${dict.commun.pays}`,
       href: undefined,
       externe: false,
     },
@@ -46,11 +55,11 @@ export default function Contact() {
   return (
     <>
       <PageHero
-        surtitre="Contact"
-        titre="Parlons de votre projet."
-        texte="Un appel, un message WhatsApp ou le formulaire ci-dessous : choisissez le canal qui vous arrange. Le premier échange et le devis sont gratuits, sans engagement."
+        surtitre={t.hero.surtitre}
+        titre={t.hero.titre}
+        texte={t.hero.texte}
         image={img.contact}
-        fil="Contact"
+        fil={dict.pages["/contact"]}
       />
 
       <Section fond="blanc">
@@ -58,9 +67,9 @@ export default function Contact() {
           <div className="grid gap-14 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
             <div>
               <TitreSection
-                surtitre="Nous joindre"
-                titre="KODÊ à Bangui."
-                texte="Nos bureaux sont Avenue Benzvi, derrière la CEMAC. Prévenez-nous avant de passer : l’équipe est souvent en production sur le terrain."
+                surtitre={t.joindre.surtitre}
+                titre={t.joindre.titre}
+                texte={t.joindre.texte}
               />
 
               <ul className="mt-10 flex flex-col divide-y divide-bordure border-y border-bordure">
@@ -87,18 +96,15 @@ export default function Contact() {
               </ul>
 
               <p className="mt-6 text-[0.88rem] leading-relaxed text-encre/60">
-                Disponibilité : du lundi au samedi, 8 h – 18 h. Réponse sous 24 heures.
+                {t.disponibilite}
               </p>
             </div>
 
             <div className="border border-bordure p-7 lg:p-9">
-              <h2 className="t-h4">Décrivez-nous votre besoin.</h2>
-              <p className="mt-3 text-[0.95rem] leading-relaxed text-encre/70">
-                Remplissez ces quelques champs, puis choisissez d’envoyer par WhatsApp ou par
-                e-mail. Votre message part déjà pré-rédigé.
-              </p>
+              <h2 className="t-h4">{t.formulaire.titre}</h2>
+              <p className="mt-3 text-[0.95rem] leading-relaxed text-encre/70">{t.formulaire.texte}</p>
               <div className="mt-8">
-                <ContactForm />
+                <ContactForm textes={dict.formulaire} />
               </div>
             </div>
           </div>

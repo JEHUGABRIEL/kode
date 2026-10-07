@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { ChevronLeft, ChevronRight } from "./icons";
+import type { Dictionnaire } from "@/i18n/dictionnaires/fr";
 
 /**
  * Carrousel (§9.4). Le site de référence utilise Swiper ; ici le
@@ -13,11 +14,13 @@ import { ChevronLeft, ChevronRight } from "./icons";
 export default function Carousel({
   slides,
   etiquette,
+  textes,
   variante = "boucle",
   className = "",
 }: {
   slides: ReactNode[];
   etiquette: string;
+  textes: Dictionnaire["carrousel"];
   variante?: "media" | "boucle";
   className?: string;
 }) {
@@ -71,7 +74,7 @@ export default function Carousel({
          minimale à la grille parente et fait déborder toute la page. */
       className={`relative min-w-0 ${className}`}
       role="group"
-      aria-roledescription="carrousel"
+      aria-roledescription={textes.role}
       aria-label={etiquette}
     >
       <div ref={piste} className="carrousel-piste -mx-5 px-5 sm:-mx-8 sm:px-8 lg:mx-0 lg:px-0">
@@ -104,7 +107,7 @@ export default function Carousel({
               type="button"
               onClick={() => aller(Math.max(0, actif - 1))}
               disabled={actif === 0}
-              aria-label="Précédent"
+              aria-label={textes.precedent}
               className="tr flex h-11 w-11 items-center justify-center border border-encre/20 text-encre hover:border-noir-doux hover:bg-noir-doux hover:text-white disabled:pointer-events-none disabled:opacity-35"
             >
               <ChevronLeft className="h-4 w-4" />
@@ -113,7 +116,7 @@ export default function Carousel({
               type="button"
               onClick={() => aller(Math.min(dernier, actif + 1))}
               disabled={actif === dernier}
-              aria-label="Suivant"
+              aria-label={textes.suivant}
               className="tr flex h-11 w-11 items-center justify-center border border-encre/20 text-encre hover:border-noir-doux hover:bg-noir-doux hover:text-white disabled:pointer-events-none disabled:opacity-35"
             >
               <ChevronRight className="h-4 w-4" />

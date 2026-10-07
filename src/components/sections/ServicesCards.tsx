@@ -1,5 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
+import { localiser } from "@/i18n/config";
+import { getDictionnaire, getLang } from "@/i18n/serveur";
 import { img } from "@/lib/site";
 import Reveal from "@/components/Reveal";
 import { ArrowRight } from "@/components/icons";
@@ -10,34 +12,19 @@ import { Btn, Container, Section } from "@/components/ui";
  * Trois blocs `call-to-action` avec image : organisation d'événements,
  * marketing digital, branding. La première carte occupe les deux colonnes.
  */
-const SERVICES = [
-  {
-    numero: "01",
-    nom: "Organisation d’Événements",
-    texte:
-      "Le cœur de KODÊ. Conception, budget, logistique, coordination du jour J : nous prenons l’événement en charge de bout en bout pour que vous puissiez le vivre — du concept créatif au bilan post-événement.",
-    image: img.services[0],
-    enAvant: true,
-  },
-  {
-    numero: "02",
-    nom: "Marketing Digital & Réseaux Sociaux",
-    texte:
-      "Nous animons vos pages avec une ligne éditoriale, un calendrier et des contenus pensés pour l’audience centrafricaine — pas pour l’algorithme seul.",
-    image: img.services[1],
-    enAvant: false,
-  },
-  {
-    numero: "03",
-    nom: "Branding & Identité Visuelle",
-    texte:
-      "Un logo ne suffit pas. Nous construisons une identité complète — nom, signes, couleurs, ton de voix — pour que votre marque soit reconnue au premier coup d’œil.",
-    image: img.services[2],
-    enAvant: false,
-  },
+/* Visuels et numéros des trois services ; les textes sont dans le dictionnaire. */
+const VISUELS = [
+  { numero: "01", image: img.services[0], enAvant: true },
+  { numero: "02", image: img.services[1], enAvant: false },
+  { numero: "03", image: img.services[2], enAvant: false },
 ];
 
-export default function ServicesCards() {
+export default async function ServicesCards() {
+  const lang = await getLang();
+  const { servicesCartes } = await getDictionnaire();
+  const SERVICES = servicesCartes.items.map((item, i) => ({ ...item, ...VISUELS[i] }));
+  const lienServices = localiser(lang, "/services");
+
   return (
     <Section fond="blanc">
       <Container>
@@ -66,8 +53,8 @@ export default function ServicesCards() {
                     {service.texte}
                   </p>
                   <div className="mt-8">
-                    <Btn href="/services" variante="sombre" fleche>
-                      En savoir plus
+                    <Btn href={lienServices} variante="sombre" fleche>
+                      {servicesCartes.enSavoirPlus}
                     </Btn>
                   </div>
                 </div>
@@ -93,10 +80,10 @@ export default function ServicesCards() {
                   </Reveal>
                   <p className="mt-4 text-[1rem] leading-relaxed text-encre/75">{service.texte}</p>
                   <Link
-                    href="/services"
+                    href={lienServices}
                     className="souligne-lien t-label-sm mt-7 inline-flex items-center gap-2 self-start text-encre"
                   >
-                    En savoir plus
+                    {servicesCartes.enSavoirPlus}
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                 </div>

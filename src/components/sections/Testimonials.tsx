@@ -3,6 +3,8 @@ import Carousel from "@/components/Carousel";
 import Link from "next/link";
 import { Quote, Star } from "@/components/icons";
 import { ColonneCollante, Container, Divider, Section, TitreSection } from "@/components/ui";
+import { localiser } from "@/i18n/config";
+import { getDictionnaire, getLang } from "@/i18n/serveur";
 import { img } from "@/lib/site";
 
 /**
@@ -13,54 +15,38 @@ import { img } from "@/lib/site";
  * KODÊ ne publie aucun témoignage inventé : le carrousel porte le
  * manifeste de l'agence en attendant de vrais retours clients signés.
  */
-const temoignages = [
-  {
-    citation: "Une entreprise peut être visible sans vraiment être comprise.",
-    fonction: "Manifeste KODÊ",
-    secteur: "Konsulting",
-    image: img.temoignages[0],
-  },
-  {
-    citation: "Vous voyez un espace. Nous y voyons une expérience.",
-    fonction: "Pôle Scénographie",
-    secteur: "Events",
-    image: img.temoignages[1],
-  },
-  {
-    citation: "Chez KODÊ, on ne fait pas que publier. On fait parler les marques.",
-    fonction: "Pôle Studio",
-    secteur: "Contenus & digital",
-    image: img.temoignages[2],
-  },
-];
+export default async function Testimonials() {
+  const lang = await getLang();
+  const dict = await getDictionnaire();
+  const t = dict.paroles;
+  const temoignages = t.items.map((item, i) => ({ ...item, image: img.temoignages[i] }));
 
-export default function Testimonials() {
   return (
     <Section fond="gris">
       <Container>
         <div className="grid items-start gap-12 lg:grid-cols-2 lg:gap-16">
           <ColonneCollante>
             <TitreSection
-              surtitre="Paroles de KODÊ"
-              titre="Ce en quoi nous croyons."
-              texte="« KODÊ est le maillon fort entre vous et vos objectifs. » Quelques convictions qui guident chaque projet, du premier appel au bilan final."
+              surtitre={t.surtitre}
+              titre={t.titre}
+              texte={t.texte}
             />
             <Divider className="mt-10" />
             <p className="mt-6 max-w-xl text-[0.95rem] leading-relaxed text-encre/70">
-              Nous préférons publier de vrais retours plutôt que des phrases inventées. Vous
-              avez travaillé avec KODÊ ? Votre témoignage a toute sa place ici.
+              {t.note}
             </p>
             <Link
-              href="/labo#avis"
+              href={localiser(lang, "/labo#avis")}
               className="souligne-lien tr-couleur mt-6 inline-flex items-center gap-2.5 font-mono text-[0.82rem] font-bold uppercase tracking-[0.12em] text-encre hover:text-accent"
             >
               <Star className="h-4 w-4 text-accent" />
-              Laisser un avis
+              {t.laisserAvis}
             </Link>
           </ColonneCollante>
 
           <Carousel
-            etiquette="Paroles de KODÊ"
+            etiquette={t.carrousel}
+            textes={dict.carrousel}
             variante="media"
             slides={temoignages.map((temoignage) => (
               <figure key={temoignage.citation}>
@@ -76,7 +62,7 @@ export default function Testimonials() {
                 <blockquote className="mt-7">
                   <Quote className="h-6 w-6 text-accent" />
                   <p className="t-serif mt-4 text-[1.25rem] leading-snug text-encre md:text-[1.5rem]">
-                    « {temoignage.citation} »
+                    {lang === "fr" ? `« ${temoignage.citation} »` : `“${temoignage.citation}”`}
                   </p>
                 </blockquote>
                 <figcaption className="t-label-sm mt-5 text-encre/60">

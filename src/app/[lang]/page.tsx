@@ -10,13 +10,18 @@ import ServicesBand from "@/components/sections/ServicesBand";
 import ServicesCards from "@/components/sections/ServicesCards";
 import Targets from "@/components/sections/Targets";
 import Testimonials from "@/components/sections/Testimonials";
+import { alternates } from "@/i18n/config";
+import { dictionnaire, getLang } from "@/i18n/serveur";
 
-export const metadata: Metadata = {
-  title: { absolute: "KODÊ — Agence de Communication & d’Événementiel à Bangui, RCA" },
-  description:
-    "KODÊ vous accompagne dans votre stratégie de communication et l’organisation d’événements immersifs à Bangui : stratégie, branding, marketing digital, événementiel, scénographie, décoration et impressions.",
-  alternates: { canonical: "/" },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const lang = await getLang();
+  const { meta } = dictionnaire(lang);
+  return {
+    title: { absolute: meta.titreDefaut },
+    description: meta.accueilDescription,
+    alternates: alternates(lang, "/"),
+  };
+}
 
 /**
  * Page d'accueil — 13 blocs, page longue à défilement continu (§5) :

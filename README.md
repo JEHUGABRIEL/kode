@@ -1,13 +1,29 @@
 # KODÊ — site vitrine (Next.js)
 
 Site de **KODÊ — Agence Créative · Communication & Événementiel**, Bangui,
-République Centrafricaine, **en français uniquement** (`lang="fr-FR"`, aucun
-sélecteur de langue).
+République Centrafricaine, **en français et en anglais** (voir « Langues »).
 
 L'architecture (pages, composants, grille, animations) reprend à l'identique la
 reproduction décrite dans **[`docs/reference-adjemson.md`](docs/reference-adjemson.md)**.
 Les couleurs, les textes, les coordonnées et le logo viennent du site statique
 KODÊ (`~/Bureau/kode`). Les photographies sont des visuels Unsplash de remplacement.
+
+## Langues (FR / EN)
+
+- Toutes les pages vivent sous `src/app/[lang]/` et sont générées en statique pour
+  `fr` et `en` (`generateStaticParams` dans le layout).
+- `src/proxy.ts` : le français reste **sans préfixe** (`/agence`, réécrit en interne vers
+  `/fr/agence`), l'anglais est servi sous **`/en`** (`/en/agence`) ; `/fr/...` redirige
+  (308) vers l'adresse sans préfixe.
+- Textes : `src/i18n/dictionnaires/fr.ts` (référence) et `en.ts`, dont le type impose
+  exactement la même structure. Les composants serveur lisent la langue avec
+  `getLang()` / `getDictionnaire()` (`next/root-params`), les composants client reçoivent
+  leur part du dictionnaire en propriété.
+- Liens internes : toujours via `localiser(lang, "/chemin")` (`src/i18n/config.ts`).
+- SEO : `<html lang>`, URL canonique et `hreflang` (fr-FR, en, x-default) par page,
+  sitemap bilingue.
+- Sélecteur : `src/components/LangSwitch.tsx`, menu déroulant qui renvoie vers la même
+  page dans l'autre langue.
 
 ## Stack
 

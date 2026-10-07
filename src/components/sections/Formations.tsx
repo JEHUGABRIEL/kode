@@ -4,6 +4,8 @@ import Link from "next/link";
 import { ArrowRight, Award, Check } from "@/components/icons";
 import Reveal from "@/components/Reveal";
 import { Btn, Container, Section, TitreSection } from "@/components/ui";
+import { localiser } from "@/i18n/config";
+import { getDictionnaire, getLang } from "@/i18n/serveur";
 import { img } from "@/lib/site";
 
 /**
@@ -14,41 +16,19 @@ import { img } from "@/lib/site";
  */
 const DELAIS = [200, 300, 400] as const;
 
-const formations = [
-  {
-    image: img.formations[0],
-    duree: "Entreprises · institutions",
-    titre: "Séminaires & conférences",
-    texte:
-      "Lancements de produit, assemblées générales, ateliers, forums et conventions d'entreprise.",
-    modules: ["Plan de salle", "Régie technique", "Badges & accueil", "Captation"],
-  },
-  {
-    image: img.formations[1],
-    duree: "Institutions · officiels",
-    titre: "Cérémonies officielles",
-    texte:
-      "Inaugurations, remises de diplômes, signatures de convention et cérémonies institutionnelles.",
-    modules: ["Protocole", "Placement officiel", "Maître de cérémonie", "Couverture presse"],
-  },
-  {
-    image: img.formations[2],
-    duree: "Familles · Bangui et province",
-    titre: "Mariages & grandes célébrations",
-    texte:
-      "Mariages, dots, anniversaires, baptêmes et fêtes de famille à Bangui et en province.",
-    modules: ["Décoration", "Art de la table", "Photocall", "Coordination jour J"],
-  },
-];
+export default async function Formations() {
+  const lang = await getLang();
+  const { events: t } = await getDictionnaire();
+  const formations = t.items.map((item, i) => ({ ...item, image: img.formations[i] }));
+  const lienEvents = localiser(lang, "/formations");
 
-export default function Formations() {
   return (
     <Section fond="blanc">
       <Container>
         <TitreSection
-          surtitre="Pôle Events"
-          titre="Tous les formats, du comité restreint au grand rassemblement."
-          texte="Quarante personnes autour d’une table ou plusieurs centaines sous chapiteau : la méthode est la même, seule l’échelle change."
+          surtitre={t.surtitre}
+          titre={t.titre}
+          texte={t.texte}
         />
 
         <div className="mt-12 flex flex-col gap-8 md:mt-16 md:gap-10">
@@ -61,7 +41,7 @@ export default function Formations() {
               <div className="flex flex-col justify-center p-7 md:px-[8%] md:py-12">
                 <p className="t-label-sm flex items-center gap-2.5 text-encre/55">
                   <Award className="h-4 w-4 text-accent" />
-                  {formation.duree}
+                  {formation.public}
                 </p>
 
                 <Reveal delai={DELAIS[i]} className="mt-4">
@@ -80,14 +60,14 @@ export default function Formations() {
                 </ul>
 
                 <p className="t-label-sm mt-7 border-t border-bordure pt-5 text-encre/55">
-                  Pris en charge du concept au démontage
+                  {t.priseEnCharge}
                 </p>
 
                 <Link
-                  href="/formations"
+                  href={lienEvents}
                   className="souligne-lien t-label-sm tr-couleur mt-5 inline-flex items-center gap-2 self-start text-encre"
                 >
-                  Voir le pôle Events
+                  {t.voirPole}
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
@@ -106,8 +86,8 @@ export default function Formations() {
         </div>
 
         <div className="mt-12 md:mt-14">
-          <Btn href="/formations" variante="sombre" fleche>
-            Tous nos formats d’événements
+          <Btn href={lienEvents} variante="sombre" fleche>
+            {t.cta}
           </Btn>
         </div>
       </Container>

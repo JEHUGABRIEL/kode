@@ -3,7 +3,9 @@ import Link from "next/link";
 import Reveal from "@/components/Reveal";
 import { ArrowRight } from "@/components/icons";
 import { Container } from "@/components/ui";
-import { assets, heros } from "@/lib/site";
+import { localiser } from "@/i18n/config";
+import { getDictionnaire, getLang } from "@/i18n/serveur";
+import { assets } from "@/lib/site";
 
 /* Conteneur du site de référence : 1280 px de large, 30 px de remplissage
    intérieur, filets verticaux à 1 px (#E6E9EB) sur les deux bords. */
@@ -21,7 +23,10 @@ const CONTENEUR = "mx-auto w-full max-w-[1280px]";
  * `out-in` de 20 % à 80 % (§7, Motion FX 1) ; enfin l'accroche et les
  * deux chiffres du site.
  */
-export default function Hero() {
+export default async function Hero() {
+  const lang = await getLang();
+  const { heros } = await getDictionnaire();
+
   return (
     <>
       <section className="bg-white">
@@ -39,7 +44,7 @@ export default function Hero() {
             <h1 className="titre-heros max-w-[750px]">{heros.titre}</h1>
           </Reveal>
 
-          <Link href="/services" className="btn-heros tr absolute bottom-0 right-[30px] z-10 translate-y-1/2">
+          <Link href={localiser(lang, "/services")} className="btn-heros tr absolute bottom-0 right-[30px] z-10 translate-y-1/2">
             {heros.cta}
             <ArrowRight className="h-4 w-4" />
           </Link>

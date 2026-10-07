@@ -1,10 +1,10 @@
 /**
- * KODÊ — Agence Créative · Communication & Événementiel — données factuelles.
- * Le site est en français uniquement (`lang="fr-FR"`), il n'y a donc ni
- * dictionnaire ni sélecteur de langue.
+ * KODÊ — Agence Créative · Communication & Événementiel — données factuelles,
+ * communes aux deux langues. Les textes affichés sont dans
+ * `src/i18n/dictionnaires/` (français et anglais).
  *
- * Coordonnées reprises du site KODÊ (`~/Bureau/kode`). Le domaine
- * `kode-rca.com` reste à confirmer avant toute publication.
+ * Coordonnées reprises du site KODÊ (`~/Bureau/kode`). L'URL est celle du
+ * déploiement Vercel, en attendant un nom de domaine propre.
  */
 export const site = {
   name: "KODÊ",
@@ -20,7 +20,7 @@ export const site = {
   country: "République Centrafricaine",
   countryCode: "CF",
   facebook: "https://www.facebook.com/profile.php?id=61584902049592",
-  url: "https://www.kode-rca.com",
+  url: "https://kode-rca.vercel.app",
 } as const;
 
 /**
@@ -37,20 +37,14 @@ export const reseaux = [
 ] as const;
 
 /**
- * Navigation principale : 5 entrées. Les adresses `/formations` et `/labo`
- * sont conservées pour garder l'architecture : elles portent désormais le
- * pôle Événementiel et les Réalisations.
+ * Navigation principale : 5 entrées. Les libellés sont dans les
+ * dictionnaires (`dict.pages`). Les adresses `/formations` et `/labo`
+ * portent le pôle Événementiel et les Réalisations.
  */
-export const nav = [
-  { href: "/", label: "Accueil" },
-  { href: "/agence", label: "L’Agence" },
-  { href: "/services", label: "Services" },
-  { href: "/formations", label: "Événementiel" },
-  { href: "/labo", label: "Réalisations" },
-] as const;
+export const nav = ["/", "/agence", "/services", "/formations", "/labo"] as const;
 
 /** CTA permanent de l'en-tête (bouton + bouton WhatsApp flottant). */
-export const navCta = { href: "/contact", label: "Démarrer un projet" } as const;
+export const navCta = "/contact";
 
 /**
  * Signature et visuels de la marque KODÊ. La photo du héros est un visuel
@@ -65,65 +59,18 @@ export const assets = {
   motif: "/img/kode-motif.svg",
 } as const;
 
-/**
- * Panneau latéral « Contactez-nous ». Le bouton carré à 9 points de
- * l'en-tête ouvre un panneau blanc de 570 px qui entre depuis la droite,
- * avec le motif de la marque, un sur-titre, le nom de la société, une
- * présentation, la liste des domaines d'intervention et un bouton « Contact ».
- */
-export const panneau = {
-  surtitre: "Contactez-nous",
-  titre: "KODÊ — Agence Créative",
-  texte:
-    "KODÊ, plus qu’une agence, c’est le maillon fort entre vous et vos objectifs : conseil en communication, événementiel et production réunis sous un même toit à Bangui. De l’idée à la réalisation, nous transformons chaque projet en expérience unique.",
-  domaines: [
-    "Stratégie & Conseil",
-    "Branding",
-    "Marketing Digital",
-    "Publicité & Médias",
-    "Organisation d’Événements",
-    "Scénographie",
-    "Décoration",
-    "Protocole & Hôtesses",
-    "Location de Matériel",
-    "Impressions & Signalétique",
-    "Production Audiovisuelle",
-    "Site Web",
-  ],
-  /* Les domaines renvoyés vers une page dédiée. */
-  domainesLies: ["Branding", "Marketing Digital", "Organisation d’Événements"],
-  cta: { href: "/contact", label: "Contact" },
-} as const;
-
-/** Contenu du haut de page. */
-export const heros = {
-  surtitre: "Agence créative · Bangui, RCA",
-  titre: "Agence de Communication & d’Événementiel à Bangui.",
-  cta: "Nos 12 expertises",
-  intro:
-    "KODÊ vous accompagne dans votre stratégie de communication et l’organisation d’événements immersifs. De l’idée à la réalisation, nous transformons chaque projet en expérience unique — avec un interlocuteur unique et une réponse sous 24 heures.",
-  stats: [
-    {
-      valeur: "12",
-      libelle: "Douze expertises réunies sous un seul toit, de la stratégie à l’impression.",
-    },
-    {
-      valeur: "360°",
-      libelle: "De l’idée au démontage, un interlocuteur unique — à Bangui et sur tout le territoire.",
-    },
-  ],
-} as const;
-
-/** Toutes les pages du site — sert au sitemap et au pied de page. */
+/** Toutes les pages du site — sitemap, pied de page et 404. */
 export const pages = [
-  { href: "/", label: "Accueil", priority: 1 },
-  { href: "/agence", label: "L’Agence", priority: 0.8 },
-  { href: "/services", label: "Services", priority: 0.9 },
-  { href: "/formations", label: "Événementiel", priority: 0.9 },
-  { href: "/labo", label: "Réalisations", priority: 0.7 },
-  { href: "/contact", label: "Contact", priority: 0.9 },
-  { href: "/mentions-legales", label: "Mentions légales", priority: 0.2 },
+  { href: "/", priority: 1 },
+  { href: "/agence", priority: 0.8 },
+  { href: "/services", priority: 0.9 },
+  { href: "/formations", priority: 0.9 },
+  { href: "/labo", priority: 0.7 },
+  { href: "/contact", priority: 0.9 },
+  { href: "/mentions-legales", priority: 0.2 },
 ] as const;
+
+export type CheminPage = (typeof pages)[number]["href"];
 
 export const waLink = (text?: string) =>
   `https://wa.me/${site.whatsapp}${text ? `?text=${encodeURIComponent(text)}` : ""}`;

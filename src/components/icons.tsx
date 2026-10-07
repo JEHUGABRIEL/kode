@@ -178,3 +178,9 @@ export const TikTok = (p: P) => (
     <path d="M16.6 3c.4 2.2 1.8 3.7 4 3.9v3.1a7 7 0 0 1-4-1.3v6.4a6.1 6.1 0 1 1-6.1-6.1c.3 0 .7 0 1 .1v3.2a3 3 0 1 0 2 2.8V3h3.1Z" />
   </svg>
 );
+
+export const ChevronDown = (p: P) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" {...p}>
+    <path d="M6 9l6 6 6-6" />
+  </svg>
+);
