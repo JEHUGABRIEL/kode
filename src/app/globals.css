@@ -1,0 +1,1074 @@
+@import "tailwindcss";
+
+/* ====================================================================
+   KODÊ — système de design
+   Structure reproduite bloc par bloc depuis `docs/reference-adjemson.md`,
+   palette KODÊ extraite du logo officiel (brun, orange flamme, crème).
+
+   Règles structurantes :
+   · palette brune chaude + UNE couleur d'accent, l'orange flamme (#FD850D) ;
+   · tous les titres en chasse fixe (Roboto Mono 700) ;
+   · échelle typographique très contrastée (16 px de corps, 70 px de H1,
+     120 px pour le display) ;
+   · animations d'entrée minimales (fadeIn, desktop uniquement) ;
+   · révélation par `clip-path` plutôt que par rotation 3D ;
+   · durée de transition unique : 300 ms ;
+     courbe signature : cubic-bezier(.62,.83,.34,.93).
+   ==================================================================== */
+
+@theme {
+  /* --- Palette KODÊ (couleurs du logo officiel) --------------------- */
+  --color-accent: #fd850d; /* orange flamme — unique couleur d'accent */
+  --color-accent-chaud: #fb6a29; /* orange chaud — fin du dégradé flamme */
+  --color-brun: #5b2904; /* brun signature */
+  --color-creme: #f6f4dd; /* crème du logo */
+  --color-gris-clair: #f3ece0; /* fond alterné sable */
+  --color-encre: #2a1a10; /* texte courant */
+  --color-noir-doux: #2a1201; /* brun nuit — fonds sombres */
+  --color-bordure: #e6d9c7; /* bordures */
+  --color-filet: #f6f4dd29; /* filets et séparateurs sur fond sombre */
+  --color-attenue: #c9b49b; /* textes atténués sur fond sombre */
+  --color-attenue-clair: #f6f4ddcc; /* textes crème atténués sur fond sombre */
+  --color-whatsapp: #25d366;
+
+  /* --- Typographie (Roboto Mono / Roboto / DM Serif Display) -------- */
+  --font-mono: var(--font-roboto-mono), "Roboto Mono", ui-monospace, monospace;
+  --font-sans: var(--font-roboto), Roboto, ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-dm-serif), "DM Serif Display", Georgia, serif;
+
+  /* --- Courbes d'accélération relevées sur le site ------------------ */
+  --ease-signature: cubic-bezier(0.62, 0.83, 0.34, 0.93);
+  --ease-amortie: cubic-bezier(0.19, 1, 0.22, 1);
+  --ease-material: cubic-bezier(0.25, 0.8, 0.25, 1);
+  --ease-depart-lent: cubic-bezier(0.58, 0.3, 0.005, 1);
+
+  /* --- Décalages de l'en-tête et des colonnes collantes -------------- */
+  --decalage-collant: 240px;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: #fbf8f2;
+    color: var(--color-encre);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background: var(--color-accent);
+    color: #ffffff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+/* ====================================================================
+   1. Échelle typographique du document (§3.2)
+   Mobile / tablette (≥768 px) / desktop (≥1024 px)
+   ==================================================================== */
+
+.t-h1,
+.t-h2,
+.t-h3,
+.t-h4,
+.t-h5,
+.t-h6,
+.t-display {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  text-wrap: balance;
+}
+
+.t-h1 {
+  font-size: 31px;
+  line-height: 1.12;
+}
+.t-h2 {
+  font-size: 25px;
+  line-height: 1.15;
+}
+.t-h3 {
+  font-size: 22px;
+  line-height: 1.18;
+}
+.t-h4 {
+  font-size: 19px;
+  line-height: 1.22;
+}
+.t-h5 {
+  font-size: 17px;
+  line-height: 1.3;
+}
+.t-h6 {
+  font-size: 16px;
+  line-height: 1.35;
+}
+.t-display {
+  font-size: 40px;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+@media (min-width: 768px) {
+  .t-h1 {
+    font-size: 50px;
+  }
+  .t-h2 {
+    font-size: 35px;
+  }
+  .t-h3 {
+    font-size: 28px;
+  }
+  .t-h4 {
+    font-size: 24px;
+  }
+  .t-h5 {
+    font-size: 19px;
+  }
+  .t-h6 {
+    font-size: 17px;
+  }
+  .t-display {
+    font-size: 70px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .t-h1 {
+    font-size: 70px;
+  }
+  .t-h2 {
+    font-size: 50px;
+  }
+  .t-h3 {
+    font-size: 44px;
+  }
+  .t-h4 {
+    font-size: 38px;
+  }
+  .t-h5 {
+    font-size: 24px;
+  }
+  .t-h6 {
+    font-size: 18px;
+  }
+  .t-display {
+    font-size: 120px;
+  }
+}
+
+/* Sur-titres, labels, mentions — Roboto Mono 700, 12 à 14 px */
+.t-label {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 1.4;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.t-label-sm {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 1.4;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* Usage éditorial ponctuel (15 déclarations dans le site de référence) */
+.t-serif {
+  font-family: var(--font-serif);
+  font-weight: 400;
+}
+
+/* ====================================================================
+   2. Transitions au survol (§8) — durée de référence : 300 ms
+   ==================================================================== */
+
+.tr {
+  transition:
+    background 0.3s,
+    border 0.3s,
+    border-radius 0.3s,
+    box-shadow 0.3s;
+}
+
+.tr-surface {
+  transition:
+    background 0.3s,
+    border-radius 0.3s,
+    opacity 0.3s;
+}
+
+.tr-couleur {
+  transition: color 0.3s;
+}
+
+.tr-icone {
+  transition: fill 0.3s;
+}
+
+/* Boutons (référence KODÊ `.btn`) : le survol monte de 2 px et l'appui
+   redescend à zéro. Durée 250 ms, cubic-bezier(.2,.8,.3,1). */
+.btn {
+  transition:
+    transform 0.25s cubic-bezier(0.2, 0.8, 0.3, 1),
+    box-shadow 0.25s,
+    background-color 0.25s,
+    color 0.25s,
+    border-color 0.25s;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+/* Liens du pied de page (référence KODÊ `.pied__liste a:hover`) : le texte
+   passe en crème et se décale de 5 px vers la droite, en 200 ms. */
+.pied-lien {
+  transition:
+    color 0.2s,
+    padding-left 0.2s;
+}
+
+.pied-lien:hover {
+  color: var(--color-creme);
+  padding-left: 5px;
+}
+
+/* Soulignement animé (§9.6) : le trait se déploie depuis un bord */
+.souligne-lien {
+  position: relative;
+}
+
+.souligne-lien::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: -4px;
+  height: 2px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.3s var(--ease-signature);
+}
+
+.souligne-lien:hover::after,
+.souligne-lien:focus-visible::after,
+.souligne-lien[aria-current="page"]::after {
+  transform: scaleX(1);
+}
+
+.souligne-lien-droite::after {
+  transform-origin: right center;
+}
+
+/* ====================================================================
+   3. Flip box (§9.1) — le verso BALAIE le recto, il ne pivote pas
+   clip-path : inset(0 100% 0 0) → inset(0), 570 ms, courbe signature
+   ==================================================================== */
+
+.flip {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.flip-verso {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 0.57s var(--ease-signature);
+}
+
+/* Variantes de direction — déclarées AVANT l'état survolé */
+.flip[data-sens="droite"] .flip-verso {
+  clip-path: inset(0 0 0 100%);
+}
+
+.flip[data-sens="haut"] .flip-verso {
+  clip-path: inset(100% 0 0 0);
+}
+
+.flip[data-sens="bas"] .flip-verso {
+  clip-path: inset(0 0 100% 0);
+}
+
+/* Au survol : le rognage s'ouvre */
+.flip:hover .flip-verso,
+.flip:focus-within .flip-verso {
+  clip-path: inset(0);
+}
+
+/* ====================================================================
+   4. En-tête collant (§9.2)
+   Apparition volontairement abrupte : invisible 90 % du temps.
+   ==================================================================== */
+
+.entete-collant {
+  position: fixed;
+  z-index: 100;
+  inset-inline: 0;
+  top: var(--entete-decalage, 0px);
+  transition:
+    opacity 0.15s linear,
+    top 0.15s linear,
+    transform 0.15s linear;
+  will-change: transform, opacity;
+}
+
+/* Variante transparente : la couleur de fond suit la même durée douce */
+.entete-collant-transparent {
+  transition:
+    opacity 0.15s linear,
+    top 0.15s linear,
+    transform 0.15s linear,
+    background-color 0.35s ease;
+}
+
+.entete-collant-entree {
+  animation: vamtam-sticky-header-fadein 1s ease forwards;
+}
+
+/* ====================================================================
+   5. Colonnes collantes (§9.3, §10)
+   Desktop et tablette seulement — offsets 240 px / 258 px.
+   ==================================================================== */
+
+.colle {
+  position: relative;
+}
+
+@media (min-width: 768px) {
+  .colle {
+    position: sticky;
+    top: 258px;
+    align-self: start;
+  }
+}
+
+@media (min-width: 1024px) {
+  .colle {
+    top: var(--decalage-collant, 240px);
+  }
+}
+
+/* Cartes empilées : chaque carte colle sous l'en-tête et la suivante
+   remonte pour la recouvrir. Un léger décalage par rang (`--rang`) laisse
+   deviner la pile. Tablette et desktop seulement : sur mobile, les cartes
+   sont plus hautes que l'écran et se lisent simplement l'une après l'autre. */
+.pile-carte {
+  position: relative;
+}
+
+@media (min-width: 768px) {
+  .pile-carte {
+    position: sticky;
+    top: calc(112px + var(--rang, 0) * 14px);
+  }
+}
+
+/* ====================================================================
+   6. Accordéon (§9.5 / §13) — grid-template-rows 0fr → 1fr
+   ==================================================================== */
+
+.accordeon-panneau {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s var(--ease-signature);
+}
+
+.accordeon-panneau[data-ouvert="true"] {
+  grid-template-rows: 1fr;
+}
+
+.accordeon-panneau > * {
+  overflow: hidden;
+}
+
+/* ====================================================================
+   7. Carrousels (§9.4) — moteur à défilement aimanté
+   ==================================================================== */
+
+.carrousel-piste {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.carrousel-piste::-webkit-scrollbar {
+  display: none;
+}
+
+.carrousel-item {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  transition: clip-path 0.1s linear;
+}
+
+.chargeur {
+  animation: swiper-preloader-spin 0.8s linear infinite;
+}
+
+/* Menu mobile (§9.7) — entrée latérale et blocage du défilement,
+   déclenchés par les keyframes `slideInRight`, `vamtam-fadein` et
+   `hide-scroll` du thème. */
+.tiroir-menu {
+  animation: slideInRight 0.35s var(--ease-signature) both;
+}
+
+.voile-menu {
+  animation: vamtam-fadein 0.3s ease both;
+}
+
+.bloque-defilement {
+  overflow: hidden;
+  animation: hide-scroll 0.3s both;
+}
+
+/* ====================================================================
+   8. Animations d'entrée (§6) — 17 éléments, desktop uniquement
+   fadeIn 15×, fadeInUp 1× ; délais 200 / 300 / 400 / 500 ms
+   ==================================================================== */
+
+@media (min-width: 1024px) {
+  .anime {
+    opacity: 0;
+  }
+
+  .anime.anime-vu {
+    animation: fadeIn 1s ease both;
+    animation-delay: var(--delai, 200ms);
+  }
+
+  .anime.anime-vu.anime-haut {
+    animation-name: fadeInUp;
+  }
+}
+
+/* Sans JavaScript, le contenu reste visible */
+@media (scripting: none) {
+  .anime {
+    opacity: 1 !important;
+  }
+}
+
+/* ====================================================================
+   9. Motion FX (§7) — 3 effets, desktop uniquement
+   ==================================================================== */
+
+@supports (animation-timeline: view()) {
+  @media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+    /* Zoom de fond de section : grossit puis revient (20 % → 80 %) */
+    .fx-zoom {
+      animation: fx-zoom linear both;
+      animation-timeline: view();
+      animation-range: 20% 80%;
+    }
+
+    /* Rotation d'une image : sens négatif, amplitude 30 (31 % → 100 %) */
+    .fx-rotation {
+      animation: fx-rotation linear both;
+      animation-timeline: view();
+      animation-range: 31% 100%;
+    }
+
+    /* Rotation douce du logo KODÊ (« Nos cibles ») */
+    .fx-rotation-douce {
+      animation: fx-rotation-douce linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
+    }
+
+    /* Translation verticale : parallaxe léger (vitesse 1) */
+    .fx-parallaxe {
+      animation: fx-parallaxe linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 100%;
+    }
+  }
+}
+
+/* ====================================================================
+   10. Bouton WhatsApp flottant (§1, §9.7) — fixe, 15 px des bords
+   ==================================================================== */
+
+.ctc-flottant {
+  position: fixed;
+  right: 15px;
+  bottom: 15px;
+  z-index: 90;
+  animation: ctcBounce 2.4s ease-in-out infinite;
+}
+
+.ctc-flottant::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  border: 2px solid var(--color-whatsapp);
+  animation: ht_ctc_anim_corner 2s ease-out infinite;
+  pointer-events: none;
+}
+
+/* Référence KODÊ `.whatsapp:hover{transform:scale(1.08)}`. L'animation de
+   rebond occupe `transform` : elle est donc coupée pendant le survol,
+   sinon le scale ne serait jamais peint. */
+.ctc-flottant:hover {
+  animation: none;
+  transform: scale(1.08);
+  transition: transform 0.2s;
+}
+
+/* ====================================================================
+   11. Images : révélation par clip-path (§9.7)
+   Le thème privilégie partout le rognage au transform ou à l'opacité.
+   ==================================================================== */
+
+.revele-gauche {
+  animation: vamtam-grow-left 1.1s var(--ease-signature) both;
+}
+
+.revele-droite {
+  animation: vamtam-grow-right 1.1s var(--ease-signature) both;
+}
+
+.revele-haut {
+  animation: vamtam-grow-top 1.1s var(--ease-signature) both;
+}
+
+.revele-bas {
+  animation: vamtam-grow-bottom 1.1s var(--ease-signature) both;
+}
+
+.zoom-arriere {
+  animation: vamtam-scale-out 1.4s var(--ease-signature) both;
+}
+
+/* ====================================================================
+   12. Keyframes du thème (§6, §9.2, §9.6, §9.7)
+   eicon-spin et fa-spin ne sont pas repris : les icônes du site sont
+   des SVG en ligne, pas une police d'icônes.
+   ==================================================================== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 100%, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes vamtam-sticky-header-fadein {
+  0% {
+    opacity: 0;
+  }
+  90% {
+    opacity: 0;
+  }
+  99% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes vamtam-underline-anim-left {
+  0% {
+    transform: scaleX(0);
+    transform-origin: left center;
+  }
+  100% {
+    transform: scaleX(1);
+    transform-origin: left center;
+  }
+}
+
+@keyframes vamtam-underline-anim-right {
+  0% {
+    transform: scaleX(0.8);
+    transform-origin: right center;
+  }
+  100% {
+    transform: scaleX(1);
+    transform-origin: right center;
+  }
+}
+
+@keyframes vamtam-grow-left {
+  0% {
+    clip-path: inset(0 100% 0 0);
+  }
+  100% {
+    clip-path: inset(0);
+  }
+}
+
+@keyframes vamtam-grow-right {
+  0% {
+    clip-path: inset(0 0 0 100%);
+  }
+  100% {
+    clip-path: inset(0);
+  }
+}
+
+@keyframes vamtam-grow-top {
+  0% {
+    clip-path: inset(0 0 100% 0);
+  }
+  100% {
+    clip-path: inset(0);
+  }
+}
+
+@keyframes vamtam-grow-bottom {
+  0% {
+    clip-path: inset(100% 0 0 0);
+  }
+  100% {
+    clip-path: inset(0);
+  }
+}
+
+@keyframes vamtam-scale-out {
+  0% {
+    transform: scale(1.4);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes vamtam-fadein {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes vamtam-fadeout {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes slideInRight {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+@keyframes hide-scroll {
+  0%,
+  100% {
+    overflow: hidden;
+  }
+}
+
+@keyframes ctcBounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes ht_ctc_anim_corner {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+@keyframes ht_ctc_cta_stick {
+  0% {
+    transform: scale(1);
+  }
+  55% {
+    transform: scale(1.12);
+  }
+  100% {
+    transform: scale(1.06);
+  }
+}
+
+@keyframes swiper-preloader-spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* ====================================================================
+   13. Motion FX : définitions
+   ==================================================================== */
+
+@keyframes fx-zoom {
+  0% {
+    transform: scale(1.05);
+  }
+  50% {
+    transform: scale(1.18);
+  }
+  100% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes fx-rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-30deg);
+  }
+}
+
+@keyframes fx-rotation-douce {
+  0% {
+    transform: rotate(10deg) scale(0.94);
+  }
+  100% {
+    transform: rotate(-10deg) scale(1.02);
+  }
+}
+
+@keyframes fx-parallaxe {
+  0% {
+    transform: translateY(4%);
+  }
+  100% {
+    transform: translateY(-4%);
+  }
+}
+
+/* ====================================================================
+   14. En-tête et héros
+   (Hauteur d'en-tête 88 px, logo 150×44 à 30 px du bord, entrées de
+   menu Roboto Mono 700 / 14 px / +1 px de lettrage, bouton « Démarrer
+   un projet » 13 px / +2 px sur le brun signature, burger carré orange,
+   H1 Roboto Mono 900 / 50 px / interligne 55 px / -1 px de lettrage en
+   capitales, bandeau photo de 617 px.)
+   ==================================================================== */
+
+.entete {
+  height: 88px;
+  background: #ffffff;
+  border-bottom: 1px solid var(--color-bordure);
+}
+
+/* Entrées du menu : hauteur pleine. Le survol (et l'entrée active) fait
+   grandir un soulignement sous le libellé — référence KODÊ `.nav__lien::after` :
+   2 px, dégradé de la flamme (#FD850D → #FB6A29), 0 → 100 % en 280 ms.
+   L'ancien indicateur au-dessus du libellé (3 px) n'est plus utilisé. */
+.nav-lien {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 88px;
+  padding-inline: 1vw;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--color-brun);
+  transition: color 0.3s;
+}
+
+.nav-lien::after {
+  content: "";
+  position: absolute;
+  left: 1vw;
+  right: 1vw;
+  bottom: 22px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(135deg, #fd850d 0%, #fb6a29 100%);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.28s;
+}
+
+.nav-lien:hover,
+.nav-lien[aria-current="page"] {
+  color: var(--color-accent);
+}
+
+.nav-lien:hover::after,
+.nav-lien[aria-current="page"]::after {
+  transform: scaleX(1);
+}
+
+/* Bouton permanent de l'en-tête */
+.btn-entete {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 88px;
+  padding-inline: 25px;
+  background: var(--color-brun);
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition:
+    background 0.3s,
+    color 0.3s;
+}
+
+.btn-entete:hover {
+  background: var(--color-accent);
+  color: var(--color-noir-doux);
+}
+
+/* Burger de droite */
+.btn-burger-entete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 82px;
+  height: 88px;
+  background: var(--color-accent);
+  color: #ffffff;
+  transition: background 0.3s;
+}
+
+.btn-burger-entete:hover {
+  background: var(--color-noir-doux);
+}
+
+/* Héros : bloc blanc bordé de filets verticaux, puis bandeau photo */
+.bloc-heros {
+  border-inline: 1px solid var(--color-bordure);
+}
+
+.titre-heros {
+  font-family: var(--font-mono);
+  font-weight: 900;
+  font-size: 26px;
+  line-height: 1.12;
+  letter-spacing: -0.5px;
+  text-transform: uppercase;
+  color: var(--color-brun);
+}
+
+@media (min-width: 768px) {
+  .titre-heros {
+    font-size: 36px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .titre-heros {
+    font-size: 50px;
+    line-height: 55px;
+    letter-spacing: -1px;
+  }
+}
+
+/* Sur-titre du héros : chasse fixe pour la barre oblique, serif pour le mot */
+.sur-titre-heros {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  line-height: 1.4;
+  color: var(--color-encre);
+}
+
+/* Bouton « Services » posé à cheval sur la photo */
+.btn-heros {
+  display: inline-flex;
+  align-items: center;
+  gap: 26px;
+  background: var(--color-noir-doux);
+  color: #ffffff;
+  padding: 18px 30px;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition:
+    background 0.3s,
+    color 0.3s;
+}
+
+.btn-heros:hover {
+  background: var(--color-accent);
+  color: var(--color-noir-doux);
+}
+
+/* ====================================================================
+   15. Panneau latéral « Contactez-nous » (§5, pop-up 1493)
+   Le bouton carré à 9 points de l'en-tête ouvre, sur le site de
+   référence, une pop-up Elementor : panneau blanc de 570 px, plein
+   hauteur, qui entre depuis la droite (`slideInRight`, 0,6 s) derrière
+   un voile brun ; ombre 2px 8px 23px 3px.
+   Sous 1024 px, c'est le tiroir de navigation qui s'ouvre à la place.
+   ==================================================================== */
+
+.voile-panneau {
+  position: fixed;
+  inset: 0;
+  z-index: 105;
+  background: rgba(42, 18, 1, 0.45);
+  animation: vamtam-fadein 0.3s ease both;
+}
+
+.panneau-lateral {
+  position: fixed;
+  inset-block: 0;
+  right: 0;
+  z-index: 106;
+  display: flex;
+  width: 570px;
+  max-width: 100vw;
+  flex-direction: column;
+  overflow-y: auto;
+  background: #ffffff;
+  box-shadow: 2px 8px 23px 3px rgba(42, 18, 1, 0.22);
+  animation: slideInRight 0.6s var(--ease-signature) both;
+}
+
+.fermer-panneau {
+  position: absolute;
+  top: 39px;
+  right: 39px;
+  display: inline-flex;
+  width: 30px;
+  height: 30px;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-accent);
+  transition: color 0.3s;
+}
+
+.fermer-panneau:hover {
+  color: var(--color-encre);
+}
+
+/* Le panneau remplace le tiroir à partir de 1024 px : sous ce seuil il
+   n'est pas affiché, sans quoi la page serait verrouillée sans raison. */
+@media (max-width: 1023.98px) {
+  .panneau-lateral,
+  .voile-panneau {
+    display: none;
+  }
+}
+
+/* ====================================================================
+   16. Survol des cartes — valeurs reprises de la référence KODÊ
+   (`~/Bureau/kode/assets/css/style.css`)
+
+   · `.carte:hover`  : monte de 6 px, ombre `0 14px 40px -18px`
+     rgba(42,18,1,.28) et bordure orange à 45 % — 300 ms,
+     cubic-bezier(.2,.8,.3,1).
+   · `.carte-projet` : monte de 7 px avec la même ombre, et l'image
+     passe à scale(1.07) en 550 ms (`.projet:hover .projet__media img`).
+
+   C'est cette élévation qui donne l'impression que la carte se
+   superpose à ses voisines — la référence n'utilise aucun z-index.
+
+   Nuance relevée à la mesure : sur le site d'origine, la règle
+   `[data-reveler].est-visible{transform:none}` (ligne 665) a la même
+   spécificité que ces `:hover` et vient APRES elles, si bien que le
+   déplacement est neutralisé et que seules l'ombre et la bordure se
+   voient. On garde le déplacement tel que la référence l'a écrit.
+   ==================================================================== */
+
+.carte {
+  transition:
+    transform 0.3s cubic-bezier(0.2, 0.8, 0.3, 1),
+    box-shadow 0.3s,
+    border-color 0.3s;
+}
+
+.carte:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 40px -18px rgb(42 18 1 / 0.28);
+  border-color: rgb(253 133 13 / 0.45);
+}
+
+.carte-projet {
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
+}
+
+.carte-projet:hover {
+  transform: translateY(-7px);
+  box-shadow: 0 14px 40px -18px rgb(42 18 1 / 0.28);
+}
+
+.carte-projet img {
+  transition: transform 0.55s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+
+.carte-projet:hover img {
+  transform: scale(1.07);
+}
+
+/* ====================================================================
+   17. Accessibilité : mouvement réduit
+   ==================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .anime {
+    opacity: 1 !important;
+  }
+}

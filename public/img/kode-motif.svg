@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="130" height="130" viewBox="0 0 130 130">
+  <g fill="none" stroke="#5B2904" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Chevrons (bande décorative du logo) -->
+    <path d="M8 14 L20 4 L32 14"/>
+    <path d="M8 24 L20 14 L32 24"/>
+    <!-- Losanges -->
+    <path d="M65 6 L75 18 L65 30 L55 18 Z"/>
+    <!-- Zigzag -->
+    <path d="M96 10 L104 20 L112 10 L120 20"/>
+    <!-- Cercle concentrique (le « Ô » du logo) -->
+    <circle cx="20" cy="66" r="11"/>
+    <circle cx="20" cy="66" r="4"/>
+    <!-- Croix / étoile -->
+    <path d="M65 54 L65 78 M53 66 L77 66 M57 58 L73 74 M73 58 L57 74"/>
+    <!-- Triangles -->
+    <path d="M98 56 L110 56 L104 68 Z"/>
+    <path d="M98 76 L110 76 L104 64 Z"/>
+    <!-- Damier africain -->
+    <path d="M10 98 h20 v20 h-20 Z"/>
+    <path d="M16 104 h8 v8 h-8 Z"/>
+    <!-- Flamme stylisée -->
+    <path d="M65 120 c-8 -6 -8 -16 0 -24 c2 6 6 6 6 12 c0 6 -3 9 -6 12 Z"/>
+    <!-- Peigne -->
+    <path d="M96 96 v20 M102 96 v20 M108 96 v20 M114 96 v20 M96 106 h18"/>
+  </g>
+</svg>
