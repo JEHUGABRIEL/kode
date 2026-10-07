@@ -216,7 +216,8 @@ function Barre({ entrees, textes }: { entrees: Entree[]; textes: Textes }) {
       </nav>
 
       <div className="ml-auto flex items-stretch">
-        <LangSwitch lang={textes.lang} textes={textes.langue} className="mr-4 self-center sm:mr-6" />
+        {/* Bureau seulement : sur mobile, le sélecteur est dans le tiroir de navigation. */}
+        <LangSwitch lang={textes.lang} textes={textes.langue} className="mr-6 hidden self-center lg:block" />
 
         <Link href={textes.cta} className="btn-entete hidden lg:inline-flex">
           {textes.entete.cta}
